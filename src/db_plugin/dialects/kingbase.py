@@ -1,0 +1,199 @@
+import time
+from typing import Any
+
+import psycopg2
+import psycopg2.extras
+
+from db_plugin.dialects.dialect_base import DialectBase
+from db_plugin.models.config import ConnectionConfig
+from db_plugin.models.result import QueryResult
+from db_plugin.models.schema import ColumnSchema
+
+
+class KingbaseDialect(DialectBase):
+    """Kingbase (人大金仓) dialect implementation.
+
+    Kingbase is compatible with PostgreSQL protocol, so we use psycopg2.
+    """
+
+    name: str = "kingbase"
+    quote_char: str = '"'
+
+    def __init__(self):
+        self._connection: Any = None
+
+    def connect(self, config: ConnectionConfig) -> Any:
+        self._connection = psycopg2.connect(
+            host=config.host,
+            port=config.port,
+            user=config.username,
+            password=config.password,
+            dbname=config.database,
+            **config.extra_params,
+        )
+        self._connection.autocommit = False
+        return self._connection
+
+    def close(self) -> None:
+        if self._connection:
+            self._connection.close()
+            self._connection = None
+
+    def execute_query(self, sql: str, params: tuple = ()) -> QueryResult:
+        if not self._connection:
+            return QueryResult(
+                columns=[],
+                rows=[],
+                row_count=0,
+                execution_time_ms=0,
+                error_message="Not connected to database",
+            )
+
+        start = time.monotonic()
+        try:
+            with self._connection.cursor(cursor_factory=psycopg2.extras.RealDictCursor) as cur:
+                cur.execute(sql, params)
+                if cur.description:
+                    columns = [desc[0] for desc in cur.description]
+                    rows = [dict(row) for row in cur.fetchall()]
+                else:
+                    columns = []
+                    rows = []
+                row_count = cur.rowcount
+                self._connection.commit()
+        except Exception as e:
+            self._connection.rollback()
+            elapsed = (time.monotonic() - start) * 1000
+            return QueryResult(
+                columns=[],
+                rows=[],
+                row_count=0,
+                execution_time_ms=elapsed,
+                error_message=str(e),
+            )
+
+        elapsed = (time.monotonic() - start) * 1000
+        return QueryResult(
+            columns=columns,
+            rows=rows,
+            row_count=row_count,
+            execution_time_ms=elapsed,
+        )
+
+    def get_tables(self) -> list[str]:
+        result = self.execute_query(
+            "SELECT tablename FROM sys_tables WHERE schemaname = 'public'"
+            " UNION ALL SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+        )
+        if result.error_message:
+            # Fallback to standard PostgreSQL catalog
+            result = self.execute_query(
+                "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+            )
+        return [row.get("tablename", "") for row in result.rows]
+
+    def get_columns(self, table_name: str) -> list[ColumnSchema]:
+        result = self.execute_query(
+            """
+            SELECT
+                column_name as name,
+                data_type,
+                is_nullable,
+                column_default as default_value,
+                column_name IN (
+                    SELECT column_name
+                    FROM information_schema.key_column_usage
+                    WHERE table_name = %s
+                    AND constraint_name IN (
+                        SELECT constraint_name
+                        FROM information_schema.table_constraints
+                        WHERE constraint_type = 'PRIMARY KEY'
+                        AND table_name = %s
+                    )
+                ) as is_primary_key
+            FROM information_schema.columns
+            WHERE table_name = %s
+            AND table_schema = 'public'
+            ORDER BY ordinal_position
+            """,
+            (table_name, table_name, table_name),
+        )
+        columns = []
+        for row in result.rows:
+            columns.append(ColumnSchema(
+                name=row["name"],
+                data_type=row["data_type"],
+                is_nullable=row["is_nullable"] == "YES",
+                default_value=row["default_value"],
+                is_primary_key=row["is_primary_key"],
+            ))
+        return columns
+
+    def get_views(self) -> list[str]:
+        result = self.execute_query(
+            "SELECT viewname FROM pg_views WHERE schemaname = 'public'"
+        )
+        return [row.get("viewname", "") for row in result.rows]
+
+    def get_primary_keys(self, table_name: str) -> list[str]:
+        result = self.execute_query(
+            """
+            SELECT column_name
+            FROM information_schema.key_column_usage
+            WHERE table_name = %s
+            AND constraint_name IN (
+                SELECT constraint_name
+                FROM information_schema.table_constraints
+                WHERE constraint_type = 'PRIMARY KEY'
+                AND table_name = %s
+            )
+            """,
+            (table_name, table_name),
+        )
+        return [row["column_name"] for row in result.rows]
+
+    def insert(self, table: str, data: dict) -> QueryResult:
+        cols = ", ".join(self.quote_identifier(k) for k in data.keys())
+        placeholders = ", ".join(["%s"] * len(data))
+        sql = f"INSERT INTO {self.quote_identifier(table)} ({cols}) VALUES ({placeholders})"
+        return self.execute_query(sql, tuple(data.values()))
+
+    def update(self, table: str, data: dict, where: dict) -> QueryResult:
+        set_clause = ", ".join(
+            f"{self.quote_identifier(k)} = %s" for k in data.keys()
+        )
+        where_clause = " AND ".join(
+            f"{self.quote_identifier(k)} = %s" for k in where.keys()
+        )
+        sql = f"UPDATE {self.quote_identifier(table)} SET {set_clause} WHERE {where_clause}"
+        params = tuple(data.values()) + tuple(where.values())
+        return self.execute_query(sql, params)
+
+    def delete(self, table: str, where: dict) -> QueryResult:
+        where_clause = " AND ".join(
+            f"{self.quote_identifier(k)} = %s" for k in where.keys()
+        )
+        sql = f"DELETE FROM {self.quote_identifier(table)} WHERE {where_clause}"
+        return self.execute_query(sql, tuple(where.values()))
+
+    def quote_identifier(self, name: str) -> str:
+        return f'"{name}"'
+
+    def get_type_mapping(self) -> dict[str, type]:
+        return {
+            "integer": int,
+            "bigint": int,
+            "smallint": int,
+            "serial": int,
+            "real": float,
+            "double precision": float,
+            "numeric": float,
+            "text": str,
+            "varchar": str,
+            "character varying": str,
+            "char": str,
+            "boolean": bool,
+            "timestamp": str,
+            "date": str,
+            "time": str,
+        }

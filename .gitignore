@@ -218,3 +218,5 @@ __marimo__/
 # Claude Code
 .claude/
 CLAUDE.md
+
+*.md
