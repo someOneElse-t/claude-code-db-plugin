@@ -219,4 +219,5 @@ __marimo__/
 .claude/
 CLAUDE.md
 
-*.md
+.idea/
+docs/
