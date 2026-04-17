@@ -17,6 +17,22 @@ class MySQLDialect(DialectBase):
 
     def __init__(self):
         self._connection: Any = None
+        self._current_schema: str = ""  # MySQL uses database as schema
+
+    @property
+    def current_schema(self) -> str:
+        return self._current_schema
+
+    @current_schema.setter
+    def current_schema(self, value: str) -> None:
+        self._current_schema = value
+
+    def get_schemas(self) -> list[str]:
+        result = self.execute_query("SELECT database() AS schema_name")
+        if result.error_message:
+            return [""]
+        schema = result.rows[0].get("schema_name", "") if result.rows else ""
+        return [schema] if schema else [""]
 
     def connect(self, config: ConnectionConfig) -> Any:
         self._connection = pymysql.connect(
@@ -27,6 +43,7 @@ class MySQLDialect(DialectBase):
             database=config.database,
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=False,
+            charset="utf8mb4",
             **config.extra_params,
         )
         return self._connection

@@ -12,6 +12,18 @@ class DialectBase(ABC):
     name: str
     quote_char: str
 
+    @property
+    def current_schema(self) -> str:
+        """Return the currently selected schema name."""
+
+    @current_schema.setter
+    def current_schema(self, value: str) -> None:
+        """Set the current schema for subsequent queries."""
+
+    @abstractmethod
+    def get_schemas(self) -> list[str]:
+        """Return list of schema names."""
+
     @abstractmethod
     def connect(self, config: ConnectionConfig) -> Any:
         """Establish a database connection using the given config."""
@@ -55,6 +67,15 @@ class DialectBase(ABC):
     @abstractmethod
     def quote_identifier(self, name: str) -> str:
         """Quote an identifier (table/column name) with the dialect's quote character."""
+
+    def format_table_ref(self, table_name: str) -> str:
+        """Format a table reference for use in SQL FROM clause.
+        Handles schema.table names appropriately per dialect.
+        """
+        if "." in table_name:
+            schema, table = table_name.split(".", 1)
+            return f"{self.quote_identifier(schema)}.{self.quote_identifier(table)}"
+        return self.quote_identifier(table_name)
 
     @abstractmethod
     def get_type_mapping(self) -> dict[str, type]:

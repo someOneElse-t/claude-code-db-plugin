@@ -106,6 +106,7 @@ class MainWindow(QMainWindow):
         dialog = ConnectionDialog(self.connection_manager, parent=self)
         if dialog.exec():
             self._update_statusbar()
+            self.object_tree.refresh()
 
     def _show_about(self) -> None:
         QMessageBox.about(self, "\u5173\u4e8e", "Claude Code DB Plugin v0.1.0")
@@ -121,6 +122,14 @@ class MainWindow(QMainWindow):
             self.statusbar.showMessage("\u672a\u8fde\u63a5")
 
     def _on_table_selected(self, table_name: str) -> None:
+        # Set the dialect's current schema if available
+        if "." in table_name:
+            schema = table_name.split(".", 1)[0]
+            db_conn = self.connection_manager.db_connection
+            if db_conn:
+                dialect = db_conn.get_dialect()
+                if hasattr(dialect, "current_schema"):
+                    dialect.current_schema = schema
         self.data_browser.load_table(table_name)
         self.tabs.setCurrentWidget(self.data_browser)
 

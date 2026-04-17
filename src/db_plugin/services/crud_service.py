@@ -21,7 +21,8 @@ class CRUDService:
         offset: int = 0,
     ) -> QueryResult:
         dialect = self.executor.connection.get_dialect()
-        sql = f"SELECT * FROM {dialect.quote_identifier(table)}"
+        table_ref = dialect.format_table_ref(table)
+        sql = f"SELECT * FROM {table_ref}"
         params: tuple = ()
         if where:
             conditions = " AND ".join(

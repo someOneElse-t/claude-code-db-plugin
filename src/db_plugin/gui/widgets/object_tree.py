@@ -5,7 +5,7 @@ from db_plugin.services.connection_manager import ConnectionManager
 
 
 class ObjectTreePanel(QTreeWidget):
-    """Tree widget showing database objects (tables, views, etc.)."""
+    """Tree widget showing database objects (schemas, tables, views, etc.)."""
 
     table_selected = Signal(str)
 
@@ -24,38 +24,62 @@ class ObjectTreePanel(QTreeWidget):
             self.addTopLevelItem(QTreeWidgetItem(["\u672a\u8fde\u63a5"]))
             return
 
-        dialect = self.connection_manager.db_connection.get_dialect()
+        db_conn = self.connection_manager.db_connection
+        dialect = db_conn.get_dialect()
 
-        # Tables node
-        tables_item = QTreeWidgetItem(["\u8868"])
+        # Query schemas
         try:
-            tables = dialect.get_tables()
-            for table in tables:
-                child = QTreeWidgetItem([table])
-                child.setData(0, Qt.UserRole, table)
-                tables_item.addChild(child)
+            schemas = dialect.get_schemas()
         except Exception:
-            tables_item.addChild(QTreeWidgetItem(["\u52a0\u8f7d\u5931\u8d25"]))
-        self.addTopLevelItem(tables_item)
+            schemas = ["public"]
+            if hasattr(dialect, "current_schema"):
+                dialect.current_schema = "public"
 
-        # Views node
-        views_item = QTreeWidgetItem(["\u89c6\u56fe"])
-        try:
-            views = dialect.get_views()
-            for view in views:
-                child = QTreeWidgetItem([view])
-                views_item.addChild(child)
-        except Exception:
-            views_item.addChild(QTreeWidgetItem(["\u52a0\u8f7d\u5931\u8d25"]))
-        self.addTopLevelItem(views_item)
+        for schema_name in schemas:
+            # Set current schema for dialect queries
+            if hasattr(dialect, "current_schema"):
+                dialect.current_schema = schema_name
 
-        tables_item.setExpanded(True)
-        views_item.setExpanded(True)
+            schema_item = QTreeWidgetItem([f"\u6a21\u5f0f: {schema_name}"])
+            schema_item.setFlags(schema_item.flags() | Qt.ItemIsUserCheckable)
+            schema_item.setCheckState(0, Qt.Unchecked)
+
+            # Tables node under schema
+            tables_item = QTreeWidgetItem(["\u8868"])
+            try:
+                tables = dialect.get_tables()
+                for table in tables:
+                    child = QTreeWidgetItem([table])
+                    child.setData(0, Qt.UserRole, table)
+                    child.setData(1, Qt.UserRole, schema_name)
+                    tables_item.addChild(child)
+            except Exception:
+                tables_item.addChild(QTreeWidgetItem(["\u52a0\u8f7d\u5931\u8d25"]))
+            schema_item.addChild(tables_item)
+
+            # Views node under schema
+            views_item = QTreeWidgetItem(["\u89c6\u56fe"])
+            try:
+                views = dialect.get_views()
+                for view in views:
+                    child = QTreeWidgetItem([view])
+                    child.setData(0, Qt.UserRole, view)
+                    child.setData(1, Qt.UserRole, schema_name)
+                    views_item.addChild(child)
+            except Exception:
+                views_item.addChild(QTreeWidgetItem(["\u52a0\u8f7d\u5931\u8d25"]))
+            schema_item.addChild(views_item)
+
+            self.addTopLevelItem(schema_item)
+            schema_item.setExpanded(True)
 
     def _on_item_double_clicked(self, item, column) -> None:
         parent = item.parent()
-        if parent and parent.text(0) == "\u8868":
+        if parent and parent.text(0) in ["\u8868", "\u89c6\u56fe"]:
             table_name = item.text(0)
+            schema_name = item.data(1, Qt.UserRole)
+            if schema_name:
+                table_name = f"{schema_name}.{table_name}"
             self.table_selected.emit(table_name)
 
     def _show_context_menu(self, position) -> None:
@@ -67,9 +91,13 @@ class ObjectTreePanel(QTreeWidget):
         parent_text = item.parent().text(0)
 
         if parent_text == "\u8868":
+            table_name = item.text(0)
+            schema_name = item.data(1, Qt.UserRole)
+            full_name = f"{schema_name}.{table_name}" if schema_name else table_name
+
             view_action = menu.addAction("\u67e5\u770b\u6570\u636e")
             view_action.triggered.connect(
-                lambda: self.table_selected.emit(item.text(0))
+                lambda: self.table_selected.emit(full_name)
             )
             schema_action = menu.addAction("\u67e5\u770b\u8868\u7ed3\u6784")
             copy_action = menu.addAction("\u590d\u5236\u8868\u540d")

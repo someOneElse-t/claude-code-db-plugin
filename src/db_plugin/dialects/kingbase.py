@@ -17,10 +17,30 @@ class KingbaseDialect(DialectBase):
     """
 
     name: str = "kingbase"
-    quote_char: str = '"'
+    quote_char: str = '`'
 
     def __init__(self):
         self._connection: Any = None
+        self._current_schema: str = "public"
+
+    @property
+    def current_schema(self) -> str:
+        return self._current_schema
+
+    @current_schema.setter
+    def current_schema(self, value: str) -> None:
+        self._current_schema = value
+
+    def get_schemas(self) -> list[str]:
+        result = self.execute_query(
+            "SELECT schema_name FROM information_schema.schemata "
+            "WHERE schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast', 'sys_catalog') "
+            "ORDER BY schema_name"
+        )
+        if result.error_message:
+            return ["public"]
+        schemas = [row.get("schema_name", "") for row in result.rows]
+        return schemas if schemas else ["public"]
 
     def connect(self, config: ConnectionConfig) -> Any:
         params = {
@@ -29,7 +49,8 @@ class KingbaseDialect(DialectBase):
             "user": config.username,
             "password": config.password,
             "dbname": config.database,
-            "sslmode": "allow",  # try non-SSL first, fallback to SSL
+            "sslmode": "allow",
+            "client_encoding": "UTF8",
             **config.extra_params,
         }
         self._connection = psycopg2.connect(**params)
@@ -83,18 +104,22 @@ class KingbaseDialect(DialectBase):
         )
 
     def get_tables(self) -> list[str]:
+        schema = self._current_schema
         result = self.execute_query(
-            "SELECT tablename FROM sys_tables WHERE schemaname = 'public'"
-            " UNION ALL SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+            "SELECT tablename FROM sys_tables WHERE schemaname = %s "
+            "UNION ALL SELECT tablename FROM pg_tables WHERE schemaname = %s",
+            (schema, schema),
         )
         if result.error_message:
-            # Fallback to standard PostgreSQL catalog
             result = self.execute_query(
-                "SELECT tablename FROM pg_tables WHERE schemaname = 'public'"
+                "SELECT tablename FROM pg_tables WHERE schemaname = %s",
+                (schema,),
             )
-        return [row.get("tablename", "") for row in result.rows]
+        tables = [row.get("tablename", "") for row in result.rows]
+        return list(dict.fromkeys(tables))  # deduplicate while preserving order
 
     def get_columns(self, table_name: str) -> list[ColumnSchema]:
+        schema = self._current_schema
         result = self.execute_query(
             """
             SELECT
@@ -106,19 +131,21 @@ class KingbaseDialect(DialectBase):
                     SELECT column_name
                     FROM information_schema.key_column_usage
                     WHERE table_name = %s
+                    AND table_schema = %s
                     AND constraint_name IN (
                         SELECT constraint_name
                         FROM information_schema.table_constraints
                         WHERE constraint_type = 'PRIMARY KEY'
                         AND table_name = %s
+                        AND table_schema = %s
                     )
                 ) as is_primary_key
             FROM information_schema.columns
             WHERE table_name = %s
-            AND table_schema = 'public'
+            AND table_schema = %s
             ORDER BY ordinal_position
             """,
-            (table_name, table_name, table_name),
+            (table_name, schema, table_name, schema, table_name, schema),
         )
         columns = []
         for row in result.rows:
@@ -132,25 +159,30 @@ class KingbaseDialect(DialectBase):
         return columns
 
     def get_views(self) -> list[str]:
+        schema = self._current_schema
         result = self.execute_query(
-            "SELECT viewname FROM pg_views WHERE schemaname = 'public'"
+            "SELECT viewname FROM pg_views WHERE schemaname = %s",
+            (schema,),
         )
         return [row.get("viewname", "") for row in result.rows]
 
     def get_primary_keys(self, table_name: str) -> list[str]:
+        schema = self._current_schema
         result = self.execute_query(
             """
             SELECT column_name
             FROM information_schema.key_column_usage
             WHERE table_name = %s
+            AND table_schema = %s
             AND constraint_name IN (
                 SELECT constraint_name
                 FROM information_schema.table_constraints
                 WHERE constraint_type = 'PRIMARY KEY'
                 AND table_name = %s
+                AND table_schema = %s
             )
             """,
-            (table_name, table_name),
+            (table_name, schema, table_name, schema),
         )
         return [row["column_name"] for row in result.rows]
 
@@ -179,7 +211,14 @@ class KingbaseDialect(DialectBase):
         return self.execute_query(sql, tuple(where.values()))
 
     def quote_identifier(self, name: str) -> str:
-        return f'"{name}"'
+        return f'`{name}`'
+
+    def format_table_ref(self, table_name: str) -> str:
+        """For Kingbase, use schema.table with proper quoting."""
+        if "." in table_name:
+            schema, table = table_name.split(".", 1)
+            return f"{self.quote_identifier(schema)}.{self.quote_identifier(table)}"
+        return self.quote_identifier(table_name)
 
     def get_type_mapping(self) -> dict[str, type]:
         return {

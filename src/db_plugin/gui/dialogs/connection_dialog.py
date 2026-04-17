@@ -64,7 +64,7 @@ class ConnectionDialog(QDialog):
         self.host_edit = QLineEdit("localhost")
         self.port_spin = QSpinBox()
         self.port_spin.setRange(1, 65535)
-        self.port_spin.setValue(3306)
+        self.port_spin.setValue(DEFAULT_PORTS.get(self.dialect_combo.currentText(), 54321))
         self.username_edit = QLineEdit()
         self.password_edit = QLineEdit()
         self.password_edit.setEchoMode(QLineEdit.Password)

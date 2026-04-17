@@ -1,6 +1,9 @@
 import json
 import os
 from pathlib import Path
+from base64 import urlsafe_b64encode, urlsafe_b64decode
+
+from cryptography.fernet import Fernet
 
 from db_plugin.core.connection import DatabaseConnection
 from db_plugin.models.config import ConnectionConfig
@@ -8,6 +11,30 @@ from db_plugin.models.config import ConnectionConfig
 
 DEFAULT_CONFIG_DIR = Path.home() / ".claude-code-db-plugin"
 DEFAULT_CONFIG_FILE = DEFAULT_CONFIG_DIR / "connections.json"
+KEY_FILE = DEFAULT_CONFIG_DIR / ".key"
+
+
+def _get_or_create_key() -> bytes:
+    """Load existing encryption key or generate a new one."""
+    if KEY_FILE.exists():
+        return urlsafe_b64decode(KEY_FILE.read_bytes())
+    key = Fernet.generate_key()
+    KEY_FILE.parent.mkdir(parents=True, exist_ok=True)
+    KEY_FILE.write_bytes(urlsafe_b64encode(key))
+    return key
+
+
+_cipher = Fernet(_get_or_create_key())
+
+
+def _encrypt(text: str) -> str:
+    """Encrypt plaintext and return base64-encoded ciphertext."""
+    return _cipher.encrypt(text.encode()).decode()
+
+
+def _decrypt(token: str) -> str:
+    """Decrypt a base64-encoded Fernet token."""
+    return _cipher.decrypt(token.encode()).decode()
 
 
 class ConnectionManager:
@@ -89,7 +116,10 @@ class ConnectionManager:
         if self._config_file.exists():
             data = json.loads(self._config_file.read_text(encoding="utf-8"))
             for item in data:
-                config = ConnectionConfig(**item)
+                password = item.get("password", "")
+                if password:
+                    password = _decrypt(password)
+                config = ConnectionConfig(**{**item, "password": password})
                 self._connections[config.name] = config
 
     def _save(self) -> None:
@@ -101,7 +131,7 @@ class ConnectionManager:
                 "host": c.host,
                 "port": c.port,
                 "username": c.username,
-                "password": c.password,
+                "password": _encrypt(c.password) if c.password else "",
                 "database": c.database,
                 "extra_params": c.extra_params,
             }
