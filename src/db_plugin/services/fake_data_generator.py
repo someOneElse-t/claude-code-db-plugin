@@ -212,28 +212,35 @@ def _generate_array(faker: Faker) -> str:
 
 
 def _is_time_column(col_lower: str, data_type: str) -> bool:
-    """Check if column is likely a time/timestamp type."""
-    for hint in ("time", "date", "ts", "timestamp", "datetime", "at"):
-        if hint in col_lower:
-            return True
-    for hint in ("time", "date", "datetime"):
+    """Check if column is likely a date/timestamp type based on name or type."""
+    # Data type checks — match actual timestamp/date types
+    for hint in ("timestamp", "datetime"):
         if hint in data_type:
             return True
+    # Name-based checks — match columns that look like timestamps
+    # (exclude pure time-type columns; they're handled separately)
+    if data_type != "time":
+        for hint in ("_at", "_date", "_time", "created", "updated", "deleted", "timestamp", "datetime"):
+            if hint in col_lower:
+                return True
+    # USER-DEFINED with time-like names (common when DB introspection can't resolve the type)
     if data_type == "user-defined":
-        return True
+        for hint in ("_at", "_date", "_time", "created", "updated", "deleted"):
+            if hint in col_lower:
+                return True
     return False
 
 
 def _is_id_auto_increment(col_lower: str, data_type: str, is_pk: bool) -> bool:
-    """Check if this is an auto-increment ID column that should be skipped."""
+    """Check if this is an auto-increment PK column that should be skipped."""
     if col_lower != "id" or not is_pk:
         return False
     return any(t in data_type for t in ("int", "bigint", "smallint", "serial"))
 
 
 def _is_id_uuid_type(col_lower: str, data_type: str, is_pk: bool) -> bool:
-    """Check if this is a UUID/VARCHAR ID column."""
-    if col_lower != "id" or not is_pk:
+    """Check if this is a `id` column with varchar/uuid type that needs a generated UUID."""
+    if col_lower != "id":
         return False
     return any(t in data_type for t in ("varchar", "char", "uuid", "string"))
 
@@ -257,7 +264,16 @@ def _generate_value(
                     return value.strftime("%Y-%m-%d %H:%M:%S")
                 return value
 
-    # 2. Check built-in field name rules
+    # 2. Time column (timestamp/datetime) — checked before name-based rules
+    #    to prevent FIELD_NAME_RULES["time"] from generating wrong format.
+    if _is_time_column(col_lower, data_type):
+        return _generate_time(config.time_type)
+
+    # 2b. Pure time type (HH:MM:SS only)
+    if data_type == "time":
+        return faker.time()
+
+    # 3. Check built-in field name rules
     for pattern, method_name in FIELD_NAME_RULES.items():
         if pattern in col_lower:
             if method_name == "address_service":
@@ -268,10 +284,6 @@ def _generate_value(
                 if isinstance(value, datetime):
                     return value.strftime("%Y-%m-%d %H:%M:%S")
                 return value
-
-    # 3. Time column
-    if _is_time_column(col_lower, data_type):
-        return _generate_time(config.time_type)
 
     # 4. Integer column
     if data_type in ("integer", "bigint", "smallint", "serial", "int", "int2", "int4", "int8"):
@@ -324,19 +336,28 @@ class FakeDataGenerator:
         logger.info("Generating %d fake records for table '%s' (columns: %d, config.time_type=%d, config.int_mode=%d)",
                      count, table.name, len(table.columns), self.config.time_type, self.config.int_mode)
         for col in table.columns:
-            logger.debug("Column '%s' -> data_type='%s', is_nullable=%s, is_pk=%s",
-                         col.name, col.data_type, col.is_nullable, col.is_primary_key)
+            col_lower = col.name.lower()
+            data_type_lower = col.data_type.lower()
+            is_auto_skip = _is_id_auto_increment(col_lower, data_type_lower, col.is_primary_key)
+            is_uuid_gen = _is_id_uuid_type(col_lower, data_type_lower, col.is_primary_key)
+            if is_auto_skip:
+                logger.info("Column '%s' (type=%s) → AUTO-INCREMENT PK: will skip (DB auto-generates)",
+                            col.name, col.data_type)
+            elif is_uuid_gen:
+                logger.info("Column '%s' (type=%s) → ID VARCHAR/UUID: will generate UUID (no hyphens)",
+                            col.name, col.data_type)
+            else:
+                logger.debug("Column '%s' -> data_type='%s', is_nullable=%s, is_pk=%s",
+                             col.name, col.data_type, col.is_nullable, col.is_primary_key)
 
         records = []
         for _ in range(count):
             record = {}
             for col in table.columns:
                 if _is_id_auto_increment(col.name.lower(), col.data_type.lower(), col.is_primary_key):
-                    # Skip auto-increment ID — let DB generate it
-                    logger.debug("Skipping auto-increment column '%s'", col.name)
                     continue
                 if _is_id_uuid_type(col.name.lower(), col.data_type.lower(), col.is_primary_key):
-                    record[col.name] = str(self.faker.uuid4())
+                    record[col.name] = self.faker.uuid4().replace("-", "")
                     continue
                 record[col.name] = _generate_value(col, self.faker, self.config)
             records.append(record)
@@ -368,3 +389,64 @@ class FakeDataGenerator:
                 logger.warning("Failed to insert fake record into '%s': %s", table.name, result.error_message)
         logger.info("Fake data insert complete: %d inserted, %d errors", inserted, errors)
         return inserted
+
+    def generate_and_insert_batch(
+        self,
+        table: TableSchema,
+        count: int,
+        executor: QueryExecutor,
+    ) -> int:
+        """Generate fake data and insert using batch INSERT. Returns count of inserted rows."""
+        logger.info("Generating and batch-inserting %d fake records into table '%s'", count, table.name)
+        records = self.generate(table, count)
+        dialect = executor.connection.get_dialect()
+        if not records:
+            logger.warning("No records generated for table '%s'", table.name)
+            return 0
+
+        inserted = 0
+        errors = 0
+        # Build batch insert SQL: INSERT INTO table (cols) VALUES (...), (...), ...
+        # Split into batches of 100 to avoid query size limits
+        batch_size = 100
+        for batch_start in range(0, len(records), batch_size):
+            batch = records[batch_start:batch_start + batch_size]
+            placeholders = []
+            all_values = []
+            for record in batch:
+                placeholders.append(f"({', '.join(['%s'] * len(record))})")
+                all_values.extend(record.values())
+            cols = ", ".join(self.quote_identifier_safe(dialect, k) for k in records[0].keys())
+            sql = f"INSERT INTO {dialect.format_table_ref(table.name)} ({cols}) VALUES {', '.join(placeholders)}"
+            try:
+                result = dialect.execute_query(sql, tuple(all_values))
+                if result.error_message:
+                    # Fall back to individual inserts for failed batch
+                    for record in batch:
+                        single_result = dialect.insert(table.name, {k: v for k, v in record.items() if v is not None})
+                        if single_result.error_message is None:
+                            inserted += 1
+                        else:
+                            errors += 1
+                            logger.warning("Failed to insert fake record into '%s': %s", table.name, single_result.error_message)
+                else:
+                    inserted += len(batch)
+                    dialect.commit()
+            except Exception as e:
+                errors += len(batch)
+                logger.warning("Batch insert failed for table '%s': %s, falling back to individual", table.name, e)
+                for record in batch:
+                    single_result = dialect.insert(table.name, {k: v for k, v in record.items() if v is not None})
+                    if single_result.error_message is None:
+                        inserted += 1
+                    else:
+                        errors += 1
+                        logger.warning("Failed to insert fake record into '%s': %s", table.name, single_result.error_message)
+
+        logger.info("Fake data batch insert complete: %d inserted, %d errors", inserted, errors)
+        return inserted
+
+    @staticmethod
+    def quote_identifier_safe(dialect, name: str) -> str:
+        """Safely quote an identifier, handling None values."""
+        return dialect.quote_identifier(name)
