@@ -17,7 +17,7 @@ class KingbaseDialect(DialectBase):
     """
 
     name: str = "kingbase"
-    quote_char: str = '`'
+    quote_char: str = '"'
 
     def __init__(self):
         self._connection: Any = None
@@ -212,7 +212,7 @@ class KingbaseDialect(DialectBase):
     def insert(self, table: str, data: dict) -> QueryResult:
         cols = ", ".join(self.quote_identifier(k) for k in data.keys())
         placeholders = ", ".join(["%s"] * len(data))
-        sql = f"INSERT INTO {self.quote_identifier(table)} ({cols}) VALUES ({placeholders})"
+        sql = f"INSERT INTO {self.format_table_ref(table)} ({cols}) VALUES ({placeholders})"
         return self.execute_query(sql, tuple(data.values()))
 
     def update(self, table: str, data: dict, where: dict) -> QueryResult:
@@ -222,7 +222,7 @@ class KingbaseDialect(DialectBase):
         where_clause = " AND ".join(
             f"{self.quote_identifier(k)} = %s" for k in where.keys()
         )
-        sql = f"UPDATE {self.quote_identifier(table)} SET {set_clause} WHERE {where_clause}"
+        sql = f"UPDATE {self.format_table_ref(table)} SET {set_clause} WHERE {where_clause}"
         params = tuple(data.values()) + tuple(where.values())
         return self.execute_query(sql, params)
 
@@ -230,7 +230,7 @@ class KingbaseDialect(DialectBase):
         where_clause = " AND ".join(
             f"{self.quote_identifier(k)} = %s" for k in where.keys()
         )
-        sql = f"DELETE FROM {self.quote_identifier(table)} WHERE {where_clause}"
+        sql = f"DELETE FROM {self.format_table_ref(table)} WHERE {where_clause}"
         return self.execute_query(sql, tuple(where.values()))
 
     def quote_identifier(self, name: str) -> str:

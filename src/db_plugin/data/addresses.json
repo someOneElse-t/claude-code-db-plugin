@@ -1,0 +1,4407 @@
+[
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "东城区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "西城区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "朝阳区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "海淀区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "丰台区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "通州区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "大兴区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "昌平区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "顺义区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "房山区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "门头沟区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "平谷区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "怀柔区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "密云区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "延庆区"
+  },
+  {
+    "province": "北京市",
+    "city": "北京市",
+    "district": "石景山区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "黄浦区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "浦东新区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "徐汇区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "长宁区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "静安区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "虹口区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "杨浦区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "闵行区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "宝山区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "嘉定区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "金山区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "松江区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "青浦区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "奉贤区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "崇明区"
+  },
+  {
+    "province": "上海市",
+    "city": "上海市",
+    "district": "普陀区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "和平区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "河东区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "河西区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "南开区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "河北区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "红桥区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "东丽区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "西青区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "津南区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "北辰区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "武清区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "宝坻区"
+  },
+  {
+    "province": "天津市",
+    "city": "天津市",
+    "district": "滨海新区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "渝中区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "江北区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "沙坪坝区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "南岸区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "九龙坡区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "渝北区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "大渡口区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "巴南区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "北碚区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "万州区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "涪陵区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "长寿区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "江津区"
+  },
+  {
+    "province": "重庆市",
+    "city": "重庆市",
+    "district": "合川区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "天河区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "海珠区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "越秀区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "荔湾区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "白云区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "黄埔区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "番禺区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "花都区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "南沙区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "增城区"
+  },
+  {
+    "province": "广东省",
+    "city": "广州市",
+    "district": "从化区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "福田区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "南山区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "罗湖区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "宝安区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "龙岗区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "龙华区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "盐田区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "坪山区"
+  },
+  {
+    "province": "广东省",
+    "city": "深圳市",
+    "district": "光明区"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "南城街道"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "东城街道"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "莞城街道"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "万江街道"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "虎门镇"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "长安镇"
+  },
+  {
+    "province": "广东省",
+    "city": "东莞市",
+    "district": "厚街镇"
+  },
+  {
+    "province": "广东省",
+    "city": "佛山市",
+    "district": "禅城区"
+  },
+  {
+    "province": "广东省",
+    "city": "佛山市",
+    "district": "南海区"
+  },
+  {
+    "province": "广东省",
+    "city": "佛山市",
+    "district": "顺德区"
+  },
+  {
+    "province": "广东省",
+    "city": "佛山市",
+    "district": "三水区"
+  },
+  {
+    "province": "广东省",
+    "city": "佛山市",
+    "district": "高明区"
+  },
+  {
+    "province": "广东省",
+    "city": "珠海市",
+    "district": "香洲区"
+  },
+  {
+    "province": "广东省",
+    "city": "珠海市",
+    "district": "斗门区"
+  },
+  {
+    "province": "广东省",
+    "city": "珠海市",
+    "district": "金湾区"
+  },
+  {
+    "province": "广东省",
+    "city": "惠州市",
+    "district": "惠城区"
+  },
+  {
+    "province": "广东省",
+    "city": "惠州市",
+    "district": "惠阳区"
+  },
+  {
+    "province": "广东省",
+    "city": "惠州市",
+    "district": "博罗县"
+  },
+  {
+    "province": "广东省",
+    "city": "惠州市",
+    "district": "惠东县"
+  },
+  {
+    "province": "广东省",
+    "city": "中山市",
+    "district": "东区街道"
+  },
+  {
+    "province": "广东省",
+    "city": "中山市",
+    "district": "石岐街道"
+  },
+  {
+    "province": "广东省",
+    "city": "中山市",
+    "district": "火炬开发区"
+  },
+  {
+    "province": "广东省",
+    "city": "中山市",
+    "district": "小榄镇"
+  },
+  {
+    "province": "广东省",
+    "city": "汕头市",
+    "district": "龙湖区"
+  },
+  {
+    "province": "广东省",
+    "city": "汕头市",
+    "district": "金平区"
+  },
+  {
+    "province": "广东省",
+    "city": "汕头市",
+    "district": "濠江区"
+  },
+  {
+    "province": "广东省",
+    "city": "湛江市",
+    "district": "赤坎区"
+  },
+  {
+    "province": "广东省",
+    "city": "湛江市",
+    "district": "霞山区"
+  },
+  {
+    "province": "广东省",
+    "city": "湛江市",
+    "district": "坡头区"
+  },
+  {
+    "province": "广东省",
+    "city": "肇庆市",
+    "district": "端州区"
+  },
+  {
+    "province": "广东省",
+    "city": "肇庆市",
+    "district": "鼎湖区"
+  },
+  {
+    "province": "广东省",
+    "city": "肇庆市",
+    "district": "高要区"
+  },
+  {
+    "province": "广东省",
+    "city": "江门市",
+    "district": "蓬江区"
+  },
+  {
+    "province": "广东省",
+    "city": "江门市",
+    "district": "江海区"
+  },
+  {
+    "province": "广东省",
+    "city": "江门市",
+    "district": "新会区"
+  },
+  {
+    "province": "广东省",
+    "city": "茂名市",
+    "district": "茂南区"
+  },
+  {
+    "province": "广东省",
+    "city": "茂名市",
+    "district": "电白区"
+  },
+  {
+    "province": "广东省",
+    "city": "梅州市",
+    "district": "梅江区"
+  },
+  {
+    "province": "广东省",
+    "city": "梅州市",
+    "district": "梅县区"
+  },
+  {
+    "province": "广东省",
+    "city": "韶关市",
+    "district": "浈江区"
+  },
+  {
+    "province": "广东省",
+    "city": "韶关市",
+    "district": "武江区"
+  },
+  {
+    "province": "广东省",
+    "city": "韶关市",
+    "district": "曲江区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "西湖区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "上城区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "拱墅区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "滨江区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "萧山区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "余杭区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "临平区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "钱塘区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "富阳区"
+  },
+  {
+    "province": "浙江省",
+    "city": "杭州市",
+    "district": "临安区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "海曙区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "江北区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "北仑区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "镇海区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "鄞州区"
+  },
+  {
+    "province": "浙江省",
+    "city": "宁波市",
+    "district": "奉化区"
+  },
+  {
+    "province": "浙江省",
+    "city": "温州市",
+    "district": "鹿城区"
+  },
+  {
+    "province": "浙江省",
+    "city": "温州市",
+    "district": "龙湾区"
+  },
+  {
+    "province": "浙江省",
+    "city": "温州市",
+    "district": "瓯海区"
+  },
+  {
+    "province": "浙江省",
+    "city": "温州市",
+    "district": "洞头区"
+  },
+  {
+    "province": "浙江省",
+    "city": "温州市",
+    "district": "瑞安市"
+  },
+  {
+    "province": "浙江省",
+    "city": "嘉兴市",
+    "district": "南湖区"
+  },
+  {
+    "province": "浙江省",
+    "city": "嘉兴市",
+    "district": "秀洲区"
+  },
+  {
+    "province": "浙江省",
+    "city": "嘉兴市",
+    "district": "海宁市"
+  },
+  {
+    "province": "浙江省",
+    "city": "绍兴市",
+    "district": "越城区"
+  },
+  {
+    "province": "浙江省",
+    "city": "绍兴市",
+    "district": "柯桥区"
+  },
+  {
+    "province": "浙江省",
+    "city": "绍兴市",
+    "district": "上虞区"
+  },
+  {
+    "province": "浙江省",
+    "city": "金华市",
+    "district": "婺城区"
+  },
+  {
+    "province": "浙江省",
+    "city": "金华市",
+    "district": "金东区"
+  },
+  {
+    "province": "浙江省",
+    "city": "金华市",
+    "district": "义乌市"
+  },
+  {
+    "province": "浙江省",
+    "city": "台州市",
+    "district": "椒江区"
+  },
+  {
+    "province": "浙江省",
+    "city": "台州市",
+    "district": "黄岩区"
+  },
+  {
+    "province": "浙江省",
+    "city": "台州市",
+    "district": "路桥区"
+  },
+  {
+    "province": "浙江省",
+    "city": "台州市",
+    "district": "临海市"
+  },
+  {
+    "province": "浙江省",
+    "city": "湖州市",
+    "district": "吴兴区"
+  },
+  {
+    "province": "浙江省",
+    "city": "湖州市",
+    "district": "南浔区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "玄武区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "秦淮区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "建邺区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "鼓楼区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "浦口区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "栖霞区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "雨花台区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "江宁区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "六合区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南京市",
+    "district": "溧水区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "姑苏区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "虎丘区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "吴中区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "相城区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "吴江区"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "昆山市"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "常熟市"
+  },
+  {
+    "province": "江苏省",
+    "city": "苏州市",
+    "district": "张家港市"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "梁溪区"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "锡山区"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "惠山区"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "滨湖区"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "新吴区"
+  },
+  {
+    "province": "江苏省",
+    "city": "无锡市",
+    "district": "江阴市"
+  },
+  {
+    "province": "江苏省",
+    "city": "常州市",
+    "district": "天宁区"
+  },
+  {
+    "province": "江苏省",
+    "city": "常州市",
+    "district": "钟楼区"
+  },
+  {
+    "province": "江苏省",
+    "city": "常州市",
+    "district": "新北区"
+  },
+  {
+    "province": "江苏省",
+    "city": "常州市",
+    "district": "武进区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南通市",
+    "district": "崇川区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南通市",
+    "district": "通州区"
+  },
+  {
+    "province": "江苏省",
+    "city": "南通市",
+    "district": "海门区"
+  },
+  {
+    "province": "江苏省",
+    "city": "扬州市",
+    "district": "广陵区"
+  },
+  {
+    "province": "江苏省",
+    "city": "扬州市",
+    "district": "邗江区"
+  },
+  {
+    "province": "江苏省",
+    "city": "扬州市",
+    "district": "江都区"
+  },
+  {
+    "province": "江苏省",
+    "city": "徐州市",
+    "district": "鼓楼区"
+  },
+  {
+    "province": "江苏省",
+    "city": "徐州市",
+    "district": "云龙区"
+  },
+  {
+    "province": "江苏省",
+    "city": "徐州市",
+    "district": "泉山区"
+  },
+  {
+    "province": "江苏省",
+    "city": "徐州市",
+    "district": "铜山区"
+  },
+  {
+    "province": "江苏省",
+    "city": "镇江市",
+    "district": "京口区"
+  },
+  {
+    "province": "江苏省",
+    "city": "镇江市",
+    "district": "润州区"
+  },
+  {
+    "province": "江苏省",
+    "city": "镇江市",
+    "district": "丹徒区"
+  },
+  {
+    "province": "江苏省",
+    "city": "泰州市",
+    "district": "海陵区"
+  },
+  {
+    "province": "江苏省",
+    "city": "泰州市",
+    "district": "高港区"
+  },
+  {
+    "province": "江苏省",
+    "city": "盐城市",
+    "district": "亭湖区"
+  },
+  {
+    "province": "江苏省",
+    "city": "盐城市",
+    "district": "盐都区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "锦江区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "青羊区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "金牛区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "武侯区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "成华区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "高新区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "龙泉驿区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "青白江区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "新都区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "温江区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "双流区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "郫都区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "天府新区"
+  },
+  {
+    "province": "四川省",
+    "city": "成都市",
+    "district": "简阳市"
+  },
+  {
+    "province": "四川省",
+    "city": "绵阳市",
+    "district": "涪城区"
+  },
+  {
+    "province": "四川省",
+    "city": "绵阳市",
+    "district": "游仙区"
+  },
+  {
+    "province": "四川省",
+    "city": "德阳市",
+    "district": "旌阳区"
+  },
+  {
+    "province": "四川省",
+    "city": "德阳市",
+    "district": "罗江区"
+  },
+  {
+    "province": "四川省",
+    "city": "乐山市",
+    "district": "市中区"
+  },
+  {
+    "province": "四川省",
+    "city": "乐山市",
+    "district": "沙湾区"
+  },
+  {
+    "province": "四川省",
+    "city": "宜宾市",
+    "district": "翠屏区"
+  },
+  {
+    "province": "四川省",
+    "city": "宜宾市",
+    "district": "叙州区"
+  },
+  {
+    "province": "四川省",
+    "city": "南充市",
+    "district": "顺庆区"
+  },
+  {
+    "province": "四川省",
+    "city": "南充市",
+    "district": "高坪区"
+  },
+  {
+    "province": "四川省",
+    "city": "南充市",
+    "district": "嘉陵区"
+  },
+  {
+    "province": "四川省",
+    "city": "泸州市",
+    "district": "江阳区"
+  },
+  {
+    "province": "四川省",
+    "city": "泸州市",
+    "district": "纳溪区"
+  },
+  {
+    "province": "四川省",
+    "city": "泸州市",
+    "district": "龙马潭区"
+  },
+  {
+    "province": "四川省",
+    "city": "达州市",
+    "district": "通川区"
+  },
+  {
+    "province": "四川省",
+    "city": "达州市",
+    "district": "达川区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "江岸区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "江汉区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "硚口区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "汉阳区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "武昌区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "洪山区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "青山区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "东西湖区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "蔡甸区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "江夏区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "黄陂区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "新洲区"
+  },
+  {
+    "province": "湖北省",
+    "city": "武汉市",
+    "district": "汉南区"
+  },
+  {
+    "province": "湖北省",
+    "city": "宜昌市",
+    "district": "西陵区"
+  },
+  {
+    "province": "湖北省",
+    "city": "宜昌市",
+    "district": "伍家岗区"
+  },
+  {
+    "province": "湖北省",
+    "city": "宜昌市",
+    "district": "点军区"
+  },
+  {
+    "province": "湖北省",
+    "city": "襄阳市",
+    "district": "襄城区"
+  },
+  {
+    "province": "湖北省",
+    "city": "襄阳市",
+    "district": "樊城区"
+  },
+  {
+    "province": "湖北省",
+    "city": "襄阳市",
+    "district": "襄州区"
+  },
+  {
+    "province": "湖北省",
+    "city": "十堰市",
+    "district": "茅箭区"
+  },
+  {
+    "province": "湖北省",
+    "city": "十堰市",
+    "district": "张湾区"
+  },
+  {
+    "province": "湖北省",
+    "city": "荆州市",
+    "district": "沙市区"
+  },
+  {
+    "province": "湖北省",
+    "city": "荆州市",
+    "district": "荆州区"
+  },
+  {
+    "province": "湖北省",
+    "city": "黄石市",
+    "district": "黄石港区"
+  },
+  {
+    "province": "湖北省",
+    "city": "黄石市",
+    "district": "西塞山区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "芙蓉区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "天心区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "岳麓区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "开福区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "雨花区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "望城区"
+  },
+  {
+    "province": "湖南省",
+    "city": "长沙市",
+    "district": "长沙县"
+  },
+  {
+    "province": "湖南省",
+    "city": "株洲市",
+    "district": "天元区"
+  },
+  {
+    "province": "湖南省",
+    "city": "株洲市",
+    "district": "芦淞区"
+  },
+  {
+    "province": "湖南省",
+    "city": "株洲市",
+    "district": "荷塘区"
+  },
+  {
+    "province": "湖南省",
+    "city": "湘潭市",
+    "district": "雨湖区"
+  },
+  {
+    "province": "湖南省",
+    "city": "湘潭市",
+    "district": "岳塘区"
+  },
+  {
+    "province": "湖南省",
+    "city": "衡阳市",
+    "district": "珠晖区"
+  },
+  {
+    "province": "湖南省",
+    "city": "衡阳市",
+    "district": "雁峰区"
+  },
+  {
+    "province": "湖南省",
+    "city": "衡阳市",
+    "district": "石鼓区"
+  },
+  {
+    "province": "湖南省",
+    "city": "衡阳市",
+    "district": "蒸湘区"
+  },
+  {
+    "province": "湖南省",
+    "city": "岳阳市",
+    "district": "岳阳楼区"
+  },
+  {
+    "province": "湖南省",
+    "city": "岳阳市",
+    "district": "云溪区"
+  },
+  {
+    "province": "湖南省",
+    "city": "岳阳市",
+    "district": "君山区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "历下区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "市中区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "槐荫区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "天桥区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "历城区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "长清区"
+  },
+  {
+    "province": "山东省",
+    "city": "济南市",
+    "district": "章丘区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "市南区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "市北区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "黄岛区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "崂山区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "李沧区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "城阳区"
+  },
+  {
+    "province": "山东省",
+    "city": "青岛市",
+    "district": "即墨区"
+  },
+  {
+    "province": "山东省",
+    "city": "烟台市",
+    "district": "芝罘区"
+  },
+  {
+    "province": "山东省",
+    "city": "烟台市",
+    "district": "福山区"
+  },
+  {
+    "province": "山东省",
+    "city": "烟台市",
+    "district": "牟平区"
+  },
+  {
+    "province": "山东省",
+    "city": "烟台市",
+    "district": "莱山区"
+  },
+  {
+    "province": "山东省",
+    "city": "潍坊市",
+    "district": "潍城区"
+  },
+  {
+    "province": "山东省",
+    "city": "潍坊市",
+    "district": "寒亭区"
+  },
+  {
+    "province": "山东省",
+    "city": "潍坊市",
+    "district": "奎文区"
+  },
+  {
+    "province": "山东省",
+    "city": "潍坊市",
+    "district": "坊子区"
+  },
+  {
+    "province": "山东省",
+    "city": "临沂市",
+    "district": "兰山区"
+  },
+  {
+    "province": "山东省",
+    "city": "临沂市",
+    "district": "罗庄区"
+  },
+  {
+    "province": "山东省",
+    "city": "临沂市",
+    "district": "河东区"
+  },
+  {
+    "province": "山东省",
+    "city": "济宁市",
+    "district": "任城区"
+  },
+  {
+    "province": "山东省",
+    "city": "济宁市",
+    "district": "兖州区"
+  },
+  {
+    "province": "山东省",
+    "city": "淄博市",
+    "district": "张店区"
+  },
+  {
+    "province": "山东省",
+    "city": "淄博市",
+    "district": "淄川区"
+  },
+  {
+    "province": "山东省",
+    "city": "淄博市",
+    "district": "博山区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "中原区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "二七区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "管城回族区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "金水区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "惠济区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "上街区"
+  },
+  {
+    "province": "河南省",
+    "city": "郑州市",
+    "district": "中牟县"
+  },
+  {
+    "province": "河南省",
+    "city": "洛阳市",
+    "district": "老城区"
+  },
+  {
+    "province": "河南省",
+    "city": "洛阳市",
+    "district": "西工区"
+  },
+  {
+    "province": "河南省",
+    "city": "洛阳市",
+    "district": "瀍河回族区"
+  },
+  {
+    "province": "河南省",
+    "city": "洛阳市",
+    "district": "涧西区"
+  },
+  {
+    "province": "河南省",
+    "city": "洛阳市",
+    "district": "洛龙区"
+  },
+  {
+    "province": "河南省",
+    "city": "开封市",
+    "district": "龙亭区"
+  },
+  {
+    "province": "河南省",
+    "city": "开封市",
+    "district": "顺河回族区"
+  },
+  {
+    "province": "河南省",
+    "city": "开封市",
+    "district": "鼓楼区"
+  },
+  {
+    "province": "河南省",
+    "city": "新乡市",
+    "district": "红旗区"
+  },
+  {
+    "province": "河南省",
+    "city": "新乡市",
+    "district": "卫滨区"
+  },
+  {
+    "province": "河南省",
+    "city": "新乡市",
+    "district": "牧野区"
+  },
+  {
+    "province": "河南省",
+    "city": "南阳市",
+    "district": "宛城区"
+  },
+  {
+    "province": "河南省",
+    "city": "南阳市",
+    "district": "卧龙区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "长安区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "桥西区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "新华区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "裕华区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "井陉矿区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "藁城区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "鹿泉区"
+  },
+  {
+    "province": "河北省",
+    "city": "石家庄市",
+    "district": "栾城区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "路南区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "路北区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "古冶区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "开平区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "丰南区"
+  },
+  {
+    "province": "河北省",
+    "city": "唐山市",
+    "district": "丰润区"
+  },
+  {
+    "province": "河北省",
+    "city": "保定市",
+    "district": "竞秀区"
+  },
+  {
+    "province": "河北省",
+    "city": "保定市",
+    "district": "莲池区"
+  },
+  {
+    "province": "河北省",
+    "city": "保定市",
+    "district": "满城区"
+  },
+  {
+    "province": "河北省",
+    "city": "邯郸市",
+    "district": "邯山区"
+  },
+  {
+    "province": "河北省",
+    "city": "邯郸市",
+    "district": "丛台区"
+  },
+  {
+    "province": "河北省",
+    "city": "邯郸市",
+    "district": "复兴区"
+  },
+  {
+    "province": "河北省",
+    "city": "秦皇岛市",
+    "district": "海港区"
+  },
+  {
+    "province": "河北省",
+    "city": "秦皇岛市",
+    "district": "山海关区"
+  },
+  {
+    "province": "河北省",
+    "city": "秦皇岛市",
+    "district": "北戴河区"
+  },
+  {
+    "province": "河北省",
+    "city": "廊坊市",
+    "district": "安次区"
+  },
+  {
+    "province": "河北省",
+    "city": "廊坊市",
+    "district": "广阳区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "鼓楼区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "台江区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "仓山区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "马尾区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "晋安区"
+  },
+  {
+    "province": "福建省",
+    "city": "福州市",
+    "district": "长乐区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "思明区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "湖里区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "集美区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "海沧区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "同安区"
+  },
+  {
+    "province": "福建省",
+    "city": "厦门市",
+    "district": "翔安区"
+  },
+  {
+    "province": "福建省",
+    "city": "泉州市",
+    "district": "鲤城区"
+  },
+  {
+    "province": "福建省",
+    "city": "泉州市",
+    "district": "丰泽区"
+  },
+  {
+    "province": "福建省",
+    "city": "泉州市",
+    "district": "洛江区"
+  },
+  {
+    "province": "福建省",
+    "city": "泉州市",
+    "district": "晋江市"
+  },
+  {
+    "province": "福建省",
+    "city": "漳州市",
+    "district": "芗城区"
+  },
+  {
+    "province": "福建省",
+    "city": "漳州市",
+    "district": "龙文区"
+  },
+  {
+    "province": "福建省",
+    "city": "漳州市",
+    "district": "龙海区"
+  },
+  {
+    "province": "福建省",
+    "city": "莆田市",
+    "district": "城厢区"
+  },
+  {
+    "province": "福建省",
+    "city": "莆田市",
+    "district": "涵江区"
+  },
+  {
+    "province": "福建省",
+    "city": "莆田市",
+    "district": "荔城区"
+  },
+  {
+    "province": "福建省",
+    "city": "莆田市",
+    "district": "秀屿区"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "瑶海区"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "庐阳区"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "蜀山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "包河区"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "长丰县"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "肥东县"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "肥西县"
+  },
+  {
+    "province": "安徽省",
+    "city": "合肥市",
+    "district": "庐江县"
+  },
+  {
+    "province": "安徽省",
+    "city": "芜湖市",
+    "district": "镜湖区"
+  },
+  {
+    "province": "安徽省",
+    "city": "芜湖市",
+    "district": "弋江区"
+  },
+  {
+    "province": "安徽省",
+    "city": "芜湖市",
+    "district": "鸠江区"
+  },
+  {
+    "province": "安徽省",
+    "city": "芜湖市",
+    "district": "湾沚区"
+  },
+  {
+    "province": "安徽省",
+    "city": "蚌埠市",
+    "district": "龙子湖区"
+  },
+  {
+    "province": "安徽省",
+    "city": "蚌埠市",
+    "district": "蚌山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "蚌埠市",
+    "district": "禹会区"
+  },
+  {
+    "province": "安徽省",
+    "city": "蚌埠市",
+    "district": "淮上区"
+  },
+  {
+    "province": "安徽省",
+    "city": "马鞍山市",
+    "district": "花山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "马鞍山市",
+    "district": "雨山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "马鞍山市",
+    "district": "博望区"
+  },
+  {
+    "province": "安徽省",
+    "city": "安庆市",
+    "district": "迎江区"
+  },
+  {
+    "province": "安徽省",
+    "city": "安庆市",
+    "district": "大观区"
+  },
+  {
+    "province": "安徽省",
+    "city": "安庆市",
+    "district": "宜秀区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "新城区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "碑林区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "莲湖区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "雁塔区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "未央区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "灞桥区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "长安区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "高陵区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "鄠邑区"
+  },
+  {
+    "province": "陕西省",
+    "city": "西安市",
+    "district": "临潼区"
+  },
+  {
+    "province": "陕西省",
+    "city": "咸阳市",
+    "district": "秦都区"
+  },
+  {
+    "province": "陕西省",
+    "city": "咸阳市",
+    "district": "渭城区"
+  },
+  {
+    "province": "陕西省",
+    "city": "咸阳市",
+    "district": "杨陵区"
+  },
+  {
+    "province": "陕西省",
+    "city": "宝鸡市",
+    "district": "渭滨区"
+  },
+  {
+    "province": "陕西省",
+    "city": "宝鸡市",
+    "district": "金台区"
+  },
+  {
+    "province": "陕西省",
+    "city": "宝鸡市",
+    "district": "陈仓区"
+  },
+  {
+    "province": "陕西省",
+    "city": "延安市",
+    "district": "宝塔区"
+  },
+  {
+    "province": "陕西省",
+    "city": "延安市",
+    "district": "安塞区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "和平区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "沈河区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "大东区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "皇姑区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "铁西区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "苏家屯区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "浑南区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "沈北新区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "于洪区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "沈阳市",
+    "district": "辽中区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "中山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "西岗区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "沙河口区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "甘井子区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "旅顺口区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "大连市",
+    "district": "金州区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "鞍山市",
+    "district": "铁东区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "鞍山市",
+    "district": "铁西区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "鞍山市",
+    "district": "立山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "鞍山市",
+    "district": "千山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "抚顺市",
+    "district": "新抚区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "抚顺市",
+    "district": "东洲区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "抚顺市",
+    "district": "望花区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "抚顺市",
+    "district": "顺城区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "道里区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "南岗区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "道外区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "香坊区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "平房区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "松北区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "呼兰区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "哈尔滨市",
+    "district": "阿城区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "齐齐哈尔市",
+    "district": "龙沙区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "齐齐哈尔市",
+    "district": "建华区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "齐齐哈尔市",
+    "district": "铁锋区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "大庆市",
+    "district": "萨尔图区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "大庆市",
+    "district": "龙凤区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "大庆市",
+    "district": "让胡路区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "牡丹江市",
+    "district": "东安区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "牡丹江市",
+    "district": "阳明区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "牡丹江市",
+    "district": "爱民区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "南关区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "朝阳区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "宽城区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "二道区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "绿园区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "双阳区"
+  },
+  {
+    "province": "吉林省",
+    "city": "长春市",
+    "district": "九台区"
+  },
+  {
+    "province": "吉林省",
+    "city": "吉林市",
+    "district": "昌邑区"
+  },
+  {
+    "province": "吉林省",
+    "city": "吉林市",
+    "district": "龙潭区"
+  },
+  {
+    "province": "吉林省",
+    "city": "吉林市",
+    "district": "船营区"
+  },
+  {
+    "province": "吉林省",
+    "city": "吉林市",
+    "district": "丰满区"
+  },
+  {
+    "province": "吉林省",
+    "city": "四平市",
+    "district": "铁西区"
+  },
+  {
+    "province": "吉林省",
+    "city": "四平市",
+    "district": "铁东区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "东湖区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "西湖区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "青云谱区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "青山湖区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "新建区"
+  },
+  {
+    "province": "江西省",
+    "city": "南昌市",
+    "district": "红谷滩区"
+  },
+  {
+    "province": "江西省",
+    "city": "赣州市",
+    "district": "章贡区"
+  },
+  {
+    "province": "江西省",
+    "city": "赣州市",
+    "district": "南康区"
+  },
+  {
+    "province": "江西省",
+    "city": "赣州市",
+    "district": "赣县区"
+  },
+  {
+    "province": "江西省",
+    "city": "景德镇市",
+    "district": "昌江区"
+  },
+  {
+    "province": "江西省",
+    "city": "景德镇市",
+    "district": "珠山区"
+  },
+  {
+    "province": "江西省",
+    "city": "九江市",
+    "district": "浔阳区"
+  },
+  {
+    "province": "江西省",
+    "city": "九江市",
+    "district": "濂溪区"
+  },
+  {
+    "province": "江西省",
+    "city": "九江市",
+    "district": "柴桑区"
+  },
+  {
+    "province": "江西省",
+    "city": "上饶市",
+    "district": "信州区"
+  },
+  {
+    "province": "江西省",
+    "city": "上饶市",
+    "district": "广丰区"
+  },
+  {
+    "province": "江西省",
+    "city": "上饶市",
+    "district": "广信区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "五华区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "盘龙区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "官渡区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "西山区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "东川区"
+  },
+  {
+    "province": "云南省",
+    "city": "昆明市",
+    "district": "呈贡区"
+  },
+  {
+    "province": "云南省",
+    "city": "大理白族自治州",
+    "district": "大理市"
+  },
+  {
+    "province": "云南省",
+    "city": "曲靖市",
+    "district": "麒麟区"
+  },
+  {
+    "province": "云南省",
+    "city": "曲靖市",
+    "district": "沾益区"
+  },
+  {
+    "province": "云南省",
+    "city": "曲靖市",
+    "district": "马龙区"
+  },
+  {
+    "province": "云南省",
+    "city": "玉溪市",
+    "district": "红塔区"
+  },
+  {
+    "province": "云南省",
+    "city": "玉溪市",
+    "district": "江川区"
+  },
+  {
+    "province": "云南省",
+    "city": "丽江市",
+    "district": "古城区"
+  },
+  {
+    "province": "云南省",
+    "city": "红河哈尼族彝族自治州",
+    "district": "蒙自市"
+  },
+  {
+    "province": "云南省",
+    "city": "红河哈尼族彝族自治州",
+    "district": "个旧市"
+  },
+  {
+    "province": "云南省",
+    "city": "红河哈尼族彝族自治州",
+    "district": "开远市"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "南明区"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "云岩区"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "花溪区"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "乌当区"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "白云区"
+  },
+  {
+    "province": "贵州省",
+    "city": "贵阳市",
+    "district": "观山湖区"
+  },
+  {
+    "province": "贵州省",
+    "city": "遵义市",
+    "district": "红花岗区"
+  },
+  {
+    "province": "贵州省",
+    "city": "遵义市",
+    "district": "汇川区"
+  },
+  {
+    "province": "贵州省",
+    "city": "遵义市",
+    "district": "播州区"
+  },
+  {
+    "province": "贵州省",
+    "city": "六盘水市",
+    "district": "钟山区"
+  },
+  {
+    "province": "贵州省",
+    "city": "安顺市",
+    "district": "西秀区"
+  },
+  {
+    "province": "贵州省",
+    "city": "安顺市",
+    "district": "平坝区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "兰州市",
+    "district": "城关区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "兰州市",
+    "district": "七里河区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "兰州市",
+    "district": "西固区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "兰州市",
+    "district": "安宁区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "兰州市",
+    "district": "红古区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "天水市",
+    "district": "秦州区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "天水市",
+    "district": "麦积区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "酒泉市",
+    "district": "肃州区"
+  },
+  {
+    "province": "海南省",
+    "city": "海口市",
+    "district": "秀英区"
+  },
+  {
+    "province": "海南省",
+    "city": "海口市",
+    "district": "龙华区"
+  },
+  {
+    "province": "海南省",
+    "city": "海口市",
+    "district": "琼山区"
+  },
+  {
+    "province": "海南省",
+    "city": "海口市",
+    "district": "美兰区"
+  },
+  {
+    "province": "海南省",
+    "city": "三亚市",
+    "district": "海棠区"
+  },
+  {
+    "province": "海南省",
+    "city": "三亚市",
+    "district": "吉阳区"
+  },
+  {
+    "province": "海南省",
+    "city": "三亚市",
+    "district": "天涯区"
+  },
+  {
+    "province": "海南省",
+    "city": "三亚市",
+    "district": "崖州区"
+  },
+  {
+    "province": "青海省",
+    "city": "西宁市",
+    "district": "城东区"
+  },
+  {
+    "province": "青海省",
+    "city": "西宁市",
+    "district": "城中区"
+  },
+  {
+    "province": "青海省",
+    "city": "西宁市",
+    "district": "城西区"
+  },
+  {
+    "province": "青海省",
+    "city": "西宁市",
+    "district": "城北区"
+  },
+  {
+    "province": "青海省",
+    "city": "西宁市",
+    "district": "湟中区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼和浩特市",
+    "district": "新城区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼和浩特市",
+    "district": "回民区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼和浩特市",
+    "district": "玉泉区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼和浩特市",
+    "district": "赛罕区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "包头市",
+    "district": "东河区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "包头市",
+    "district": "昆都仑区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "包头市",
+    "district": "青山区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "包头市",
+    "district": "九原区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "鄂尔多斯市",
+    "district": "东胜区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "鄂尔多斯市",
+    "district": "康巴什区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "兴宁区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "青秀区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "江南区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "西乡塘区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "良庆区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "南宁市",
+    "district": "邕宁区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "秀峰区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "叠彩区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "象山区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "七星区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "雁山区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "桂林市",
+    "district": "临桂区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "柳州市",
+    "district": "城中区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "柳州市",
+    "district": "鱼峰区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "柳州市",
+    "district": "柳南区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "柳州市",
+    "district": "柳北区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "拉萨市",
+    "district": "城关区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "拉萨市",
+    "district": "堆龙德庆区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "拉萨市",
+    "district": "达孜区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "天山区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "沙依巴克区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "新市区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "水磨沟区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "头屯河区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "乌鲁木齐市",
+    "district": "米东区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "克拉玛依市",
+    "district": "克拉玛依区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "银川市",
+    "district": "兴庆区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "银川市",
+    "district": "西夏区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "银川市",
+    "district": "金凤区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "石嘴山市",
+    "district": "大武口区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "石嘴山市",
+    "district": "惠农区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "小店区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "迎泽区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "杏花岭区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "尖草坪区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "万柏林区"
+  },
+  {
+    "province": "山西省",
+    "city": "太原市",
+    "district": "晋源区"
+  },
+  {
+    "province": "山西省",
+    "city": "大同市",
+    "district": "平城区"
+  },
+  {
+    "province": "山西省",
+    "city": "大同市",
+    "district": "云冈区"
+  },
+  {
+    "province": "山西省",
+    "city": "大同市",
+    "district": "新荣区"
+  },
+  {
+    "province": "山西省",
+    "city": "长治市",
+    "district": "潞州区"
+  },
+  {
+    "province": "山西省",
+    "city": "长治市",
+    "district": "上党区"
+  },
+  {
+    "province": "山西省",
+    "city": "长治市",
+    "district": "屯留区"
+  },
+  {
+    "province": "山西省",
+    "city": "晋中市",
+    "district": "榆次区"
+  },
+  {
+    "province": "山西省",
+    "city": "晋中市",
+    "district": "太谷区"
+  },
+  {
+    "province": "山西省",
+    "city": "运城市",
+    "district": "盐湖区"
+  },
+  {
+    "province": "湖北省",
+    "city": "鄂州市",
+    "district": "鄂城区"
+  },
+  {
+    "province": "湖北省",
+    "city": "咸宁市",
+    "district": "咸安区"
+  },
+  {
+    "province": "湖北省",
+    "city": "黄冈市",
+    "district": "黄州区"
+  },
+  {
+    "province": "湖北省",
+    "city": "孝感市",
+    "district": "孝南区"
+  },
+  {
+    "province": "湖北省",
+    "city": "随州市",
+    "district": "曾都区"
+  },
+  {
+    "province": "山东省",
+    "city": "威海市",
+    "district": "环翠区"
+  },
+  {
+    "province": "山东省",
+    "city": "威海市",
+    "district": "文登区"
+  },
+  {
+    "province": "山东省",
+    "city": "日照市",
+    "district": "东港区"
+  },
+  {
+    "province": "山东省",
+    "city": "日照市",
+    "district": "岚山区"
+  },
+  {
+    "province": "山东省",
+    "city": "泰安市",
+    "district": "泰山区"
+  },
+  {
+    "province": "山东省",
+    "city": "泰安市",
+    "district": "岱岳区"
+  },
+  {
+    "province": "山东省",
+    "city": "聊城市",
+    "district": "东昌府区"
+  },
+  {
+    "province": "山东省",
+    "city": "德州市",
+    "district": "德城区"
+  },
+  {
+    "province": "山东省",
+    "city": "德州市",
+    "district": "陵城区"
+  },
+  {
+    "province": "山东省",
+    "city": "滨州市",
+    "district": "滨城区"
+  },
+  {
+    "province": "山东省",
+    "city": "滨州市",
+    "district": "沾化区"
+  },
+  {
+    "province": "山东省",
+    "city": "菏泽市",
+    "district": "牡丹区"
+  },
+  {
+    "province": "山东省",
+    "city": "菏泽市",
+    "district": "定陶区"
+  },
+  {
+    "province": "江苏省",
+    "city": "淮安市",
+    "district": "淮安区"
+  },
+  {
+    "province": "江苏省",
+    "city": "淮安市",
+    "district": "淮阴区"
+  },
+  {
+    "province": "江苏省",
+    "city": "淮安市",
+    "district": "清江浦区"
+  },
+  {
+    "province": "江苏省",
+    "city": "淮安市",
+    "district": "洪泽区"
+  },
+  {
+    "province": "江苏省",
+    "city": "连云港市",
+    "district": "连云区"
+  },
+  {
+    "province": "江苏省",
+    "city": "连云港市",
+    "district": "海州区"
+  },
+  {
+    "province": "江苏省",
+    "city": "连云港市",
+    "district": "赣榆区"
+  },
+  {
+    "province": "江苏省",
+    "city": "宿迁市",
+    "district": "宿城区"
+  },
+  {
+    "province": "江苏省",
+    "city": "宿迁市",
+    "district": "宿豫区"
+  },
+  {
+    "province": "浙江省",
+    "city": "衢州市",
+    "district": "柯城区"
+  },
+  {
+    "province": "浙江省",
+    "city": "衢州市",
+    "district": "衢江区"
+  },
+  {
+    "province": "浙江省",
+    "city": "丽水市",
+    "district": "莲都区"
+  },
+  {
+    "province": "浙江省",
+    "city": "舟山市",
+    "district": "定海区"
+  },
+  {
+    "province": "浙江省",
+    "city": "舟山市",
+    "district": "普陀区"
+  },
+  {
+    "province": "广东省",
+    "city": "阳江市",
+    "district": "江城区"
+  },
+  {
+    "province": "广东省",
+    "city": "阳江市",
+    "district": "阳东区"
+  },
+  {
+    "province": "广东省",
+    "city": "清远市",
+    "district": "清城区"
+  },
+  {
+    "province": "广东省",
+    "city": "清远市",
+    "district": "清新区"
+  },
+  {
+    "province": "广东省",
+    "city": "潮州市",
+    "district": "湘桥区"
+  },
+  {
+    "province": "广东省",
+    "city": "潮州市",
+    "district": "潮安区"
+  },
+  {
+    "province": "广东省",
+    "city": "揭阳市",
+    "district": "榕城区"
+  },
+  {
+    "province": "广东省",
+    "city": "揭阳市",
+    "district": "揭东区"
+  },
+  {
+    "province": "广东省",
+    "city": "云浮市",
+    "district": "云城区"
+  },
+  {
+    "province": "广东省",
+    "city": "云浮市",
+    "district": "云安区"
+  },
+  {
+    "province": "广东省",
+    "city": "汕尾市",
+    "district": "城区"
+  },
+  {
+    "province": "广东省",
+    "city": "河源市",
+    "district": "源城区"
+  },
+  {
+    "province": "四川省",
+    "city": "遂宁市",
+    "district": "船山区"
+  },
+  {
+    "province": "四川省",
+    "city": "遂宁市",
+    "district": "安居区"
+  },
+  {
+    "province": "四川省",
+    "city": "内江市",
+    "district": "市中区"
+  },
+  {
+    "province": "四川省",
+    "city": "内江市",
+    "district": "东兴区"
+  },
+  {
+    "province": "四川省",
+    "city": "广安市",
+    "district": "广安区"
+  },
+  {
+    "province": "四川省",
+    "city": "广安市",
+    "district": "前锋区"
+  },
+  {
+    "province": "四川省",
+    "city": "眉山市",
+    "district": "东坡区"
+  },
+  {
+    "province": "四川省",
+    "city": "眉山市",
+    "district": "彭山区"
+  },
+  {
+    "province": "四川省",
+    "city": "广元市",
+    "district": "利州区"
+  },
+  {
+    "province": "四川省",
+    "city": "广元市",
+    "district": "昭化区"
+  },
+  {
+    "province": "四川省",
+    "city": "广元市",
+    "district": "朝天区"
+  },
+  {
+    "province": "四川省",
+    "city": "雅安市",
+    "district": "雨城区"
+  },
+  {
+    "province": "四川省",
+    "city": "雅安市",
+    "district": "名山区"
+  },
+  {
+    "province": "河南省",
+    "city": "平顶山市",
+    "district": "新华区"
+  },
+  {
+    "province": "河南省",
+    "city": "平顶山市",
+    "district": "卫东区"
+  },
+  {
+    "province": "河南省",
+    "city": "平顶山市",
+    "district": "湛河区"
+  },
+  {
+    "province": "河南省",
+    "city": "安阳市",
+    "district": "文峰区"
+  },
+  {
+    "province": "河南省",
+    "city": "安阳市",
+    "district": "北关区"
+  },
+  {
+    "province": "河南省",
+    "city": "安阳市",
+    "district": "殷都区"
+  },
+  {
+    "province": "河南省",
+    "city": "安阳市",
+    "district": "龙安区"
+  },
+  {
+    "province": "河南省",
+    "city": "鹤壁市",
+    "district": "鹤山区"
+  },
+  {
+    "province": "河南省",
+    "city": "鹤壁市",
+    "district": "山城区"
+  },
+  {
+    "province": "河南省",
+    "city": "鹤壁市",
+    "district": "淇滨区"
+  },
+  {
+    "province": "河南省",
+    "city": "焦作市",
+    "district": "解放区"
+  },
+  {
+    "province": "河南省",
+    "city": "焦作市",
+    "district": "中站区"
+  },
+  {
+    "province": "河南省",
+    "city": "焦作市",
+    "district": "马村区"
+  },
+  {
+    "province": "河南省",
+    "city": "焦作市",
+    "district": "山阳区"
+  },
+  {
+    "province": "河南省",
+    "city": "濮阳市",
+    "district": "华龙区"
+  },
+  {
+    "province": "河南省",
+    "city": "许昌市",
+    "district": "魏都区"
+  },
+  {
+    "province": "河南省",
+    "city": "许昌市",
+    "district": "建安区"
+  },
+  {
+    "province": "河南省",
+    "city": "信阳市",
+    "district": "浉河区"
+  },
+  {
+    "province": "河南省",
+    "city": "信阳市",
+    "district": "平桥区"
+  },
+  {
+    "province": "河南省",
+    "city": "周口市",
+    "district": "川汇区"
+  },
+  {
+    "province": "河南省",
+    "city": "周口市",
+    "district": "淮阳区"
+  },
+  {
+    "province": "河南省",
+    "city": "驻马店市",
+    "district": "驿城区"
+  },
+  {
+    "province": "河南省",
+    "city": "商丘市",
+    "district": "梁园区"
+  },
+  {
+    "province": "河南省",
+    "city": "商丘市",
+    "district": "睢阳区"
+  },
+  {
+    "province": "河南省",
+    "city": "三门峡市",
+    "district": "湖滨区"
+  },
+  {
+    "province": "河南省",
+    "city": "三门峡市",
+    "district": "陕州区"
+  },
+  {
+    "province": "河北省",
+    "city": "邢台市",
+    "district": "襄都区"
+  },
+  {
+    "province": "河北省",
+    "city": "邢台市",
+    "district": "信都区"
+  },
+  {
+    "province": "河北省",
+    "city": "邢台市",
+    "district": "任泽区"
+  },
+  {
+    "province": "河北省",
+    "city": "邢台市",
+    "district": "南和区"
+  },
+  {
+    "province": "河北省",
+    "city": "张家口市",
+    "district": "桥东区"
+  },
+  {
+    "province": "河北省",
+    "city": "张家口市",
+    "district": "桥西区"
+  },
+  {
+    "province": "河北省",
+    "city": "张家口市",
+    "district": "宣化区"
+  },
+  {
+    "province": "河北省",
+    "city": "张家口市",
+    "district": "下花园区"
+  },
+  {
+    "province": "河北省",
+    "city": "承德市",
+    "district": "双桥区"
+  },
+  {
+    "province": "河北省",
+    "city": "承德市",
+    "district": "双滦区"
+  },
+  {
+    "province": "河北省",
+    "city": "承德市",
+    "district": "鹰手营子矿区"
+  },
+  {
+    "province": "河北省",
+    "city": "沧州市",
+    "district": "新华区"
+  },
+  {
+    "province": "河北省",
+    "city": "沧州市",
+    "district": "运河区"
+  },
+  {
+    "province": "河北省",
+    "city": "沧州市",
+    "district": "沧县"
+  },
+  {
+    "province": "河北省",
+    "city": "衡水市",
+    "district": "桃城区"
+  },
+  {
+    "province": "河北省",
+    "city": "衡水市",
+    "district": "冀州区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮南市",
+    "district": "田家庵区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮南市",
+    "district": "大通区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮南市",
+    "district": "谢家集区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮南市",
+    "district": "八公山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮南市",
+    "district": "潘集区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮北市",
+    "district": "杜集区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮北市",
+    "district": "相山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "淮北市",
+    "district": "烈山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "铜陵市",
+    "district": "铜官区"
+  },
+  {
+    "province": "安徽省",
+    "city": "铜陵市",
+    "district": "义安区"
+  },
+  {
+    "province": "安徽省",
+    "city": "铜陵市",
+    "district": "郊区"
+  },
+  {
+    "province": "安徽省",
+    "city": "六安市",
+    "district": "金安区"
+  },
+  {
+    "province": "安徽省",
+    "city": "六安市",
+    "district": "裕安区"
+  },
+  {
+    "province": "安徽省",
+    "city": "六安市",
+    "district": "叶集区"
+  },
+  {
+    "province": "安徽省",
+    "city": "滁州市",
+    "district": "琅琊区"
+  },
+  {
+    "province": "安徽省",
+    "city": "滁州市",
+    "district": "南谯区"
+  },
+  {
+    "province": "安徽省",
+    "city": "阜阳市",
+    "district": "颍州区"
+  },
+  {
+    "province": "安徽省",
+    "city": "阜阳市",
+    "district": "颍东区"
+  },
+  {
+    "province": "安徽省",
+    "city": "阜阳市",
+    "district": "颍泉区"
+  },
+  {
+    "province": "安徽省",
+    "city": "宿州市",
+    "district": "埇桥区"
+  },
+  {
+    "province": "安徽省",
+    "city": "宣城市",
+    "district": "宣州区"
+  },
+  {
+    "province": "安徽省",
+    "city": "池州市",
+    "district": "贵池区"
+  },
+  {
+    "province": "安徽省",
+    "city": "黄山市",
+    "district": "屯溪区"
+  },
+  {
+    "province": "安徽省",
+    "city": "黄山市",
+    "district": "黄山区"
+  },
+  {
+    "province": "安徽省",
+    "city": "黄山市",
+    "district": "徽州区"
+  },
+  {
+    "province": "安徽省",
+    "city": "黄山市",
+    "district": "歙县"
+  },
+  {
+    "province": "陕西省",
+    "city": "铜川市",
+    "district": "王益区"
+  },
+  {
+    "province": "陕西省",
+    "city": "铜川市",
+    "district": "印台区"
+  },
+  {
+    "province": "陕西省",
+    "city": "铜川市",
+    "district": "耀州区"
+  },
+  {
+    "province": "陕西省",
+    "city": "汉中市",
+    "district": "汉台区"
+  },
+  {
+    "province": "陕西省",
+    "city": "汉中市",
+    "district": "南郑区"
+  },
+  {
+    "province": "陕西省",
+    "city": "榆林市",
+    "district": "榆阳区"
+  },
+  {
+    "province": "陕西省",
+    "city": "榆林市",
+    "district": "横山区"
+  },
+  {
+    "province": "陕西省",
+    "city": "安康市",
+    "district": "汉滨区"
+  },
+  {
+    "province": "陕西省",
+    "city": "商洛市",
+    "district": "商州区"
+  },
+  {
+    "province": "陕西省",
+    "city": "渭南市",
+    "district": "临渭区"
+  },
+  {
+    "province": "陕西省",
+    "city": "渭南市",
+    "district": "华州区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "本溪市",
+    "district": "平山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "本溪市",
+    "district": "溪湖区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "本溪市",
+    "district": "明山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "本溪市",
+    "district": "南芬区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "丹东市",
+    "district": "元宝区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "丹东市",
+    "district": "振兴区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "丹东市",
+    "district": "振安区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "锦州市",
+    "district": "古塔区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "锦州市",
+    "district": "凌河区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "锦州市",
+    "district": "太和区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "营口市",
+    "district": "站前区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "营口市",
+    "district": "西市区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "营口市",
+    "district": "鲅鱼圈区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "营口市",
+    "district": "老边区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "阜新市",
+    "district": "海州区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "阜新市",
+    "district": "新邱区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "阜新市",
+    "district": "太平区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "辽阳市",
+    "district": "白塔区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "辽阳市",
+    "district": "文圣区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "辽阳市",
+    "district": "宏伟区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "辽阳市",
+    "district": "弓长岭区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "辽阳市",
+    "district": "太子河区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "盘锦市",
+    "district": "双台子区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "盘锦市",
+    "district": "兴隆台区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "铁岭市",
+    "district": "银州区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "铁岭市",
+    "district": "清河区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "朝阳市",
+    "district": "双塔区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "朝阳市",
+    "district": "龙城区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "葫芦岛市",
+    "district": "连山区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "葫芦岛市",
+    "district": "龙港区"
+  },
+  {
+    "province": "辽宁省",
+    "city": "葫芦岛市",
+    "district": "南票区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鸡西市",
+    "district": "鸡冠区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鸡西市",
+    "district": "恒山区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鹤岗市",
+    "district": "向阳区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鹤岗市",
+    "district": "工农区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鹤岗市",
+    "district": "南山区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "鹤岗市",
+    "district": "兴安区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "双鸭山市",
+    "district": "尖山区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "双鸭山市",
+    "district": "岭东区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "伊春市",
+    "district": "伊美区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "伊春市",
+    "district": "乌翠区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "佳木斯市",
+    "district": "向阳区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "佳木斯市",
+    "district": "前进区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "佳木斯市",
+    "district": "东风区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "佳木斯市",
+    "district": "郊区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "七台河市",
+    "district": "新兴区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "七台河市",
+    "district": "桃山区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "黑河市",
+    "district": "爱辉区"
+  },
+  {
+    "province": "黑龙江省",
+    "city": "绥化市",
+    "district": "北林区"
+  },
+  {
+    "province": "吉林省",
+    "city": "辽源市",
+    "district": "龙山区"
+  },
+  {
+    "province": "吉林省",
+    "city": "辽源市",
+    "district": "西安区"
+  },
+  {
+    "province": "吉林省",
+    "city": "通化市",
+    "district": "东昌区"
+  },
+  {
+    "province": "吉林省",
+    "city": "通化市",
+    "district": "二道江区"
+  },
+  {
+    "province": "吉林省",
+    "city": "白山市",
+    "district": "浑江区"
+  },
+  {
+    "province": "吉林省",
+    "city": "白山市",
+    "district": "江源区"
+  },
+  {
+    "province": "吉林省",
+    "city": "松原市",
+    "district": "宁江区"
+  },
+  {
+    "province": "吉林省",
+    "city": "白城市",
+    "district": "洮北区"
+  },
+  {
+    "province": "吉林省",
+    "city": "延边朝鲜族自治州",
+    "district": "延吉市"
+  },
+  {
+    "province": "吉林省",
+    "city": "延边朝鲜族自治州",
+    "district": "图们市"
+  },
+  {
+    "province": "江西省",
+    "city": "萍乡市",
+    "district": "安源区"
+  },
+  {
+    "province": "江西省",
+    "city": "萍乡市",
+    "district": "湘东区"
+  },
+  {
+    "province": "江西省",
+    "city": "新余市",
+    "district": "渝水区"
+  },
+  {
+    "province": "江西省",
+    "city": "鹰潭市",
+    "district": "月湖区"
+  },
+  {
+    "province": "江西省",
+    "city": "鹰潭市",
+    "district": "余江区"
+  },
+  {
+    "province": "江西省",
+    "city": "宜春市",
+    "district": "袁州区"
+  },
+  {
+    "province": "江西省",
+    "city": "抚州市",
+    "district": "临川区"
+  },
+  {
+    "province": "江西省",
+    "city": "抚州市",
+    "district": "东乡区"
+  },
+  {
+    "province": "江西省",
+    "city": "吉安市",
+    "district": "吉州区"
+  },
+  {
+    "province": "江西省",
+    "city": "吉安市",
+    "district": "青原区"
+  },
+  {
+    "province": "云南省",
+    "city": "昭通市",
+    "district": "昭阳区"
+  },
+  {
+    "province": "云南省",
+    "city": "保山市",
+    "district": "隆阳区"
+  },
+  {
+    "province": "云南省",
+    "city": "楚雄彝族自治州",
+    "district": "楚雄市"
+  },
+  {
+    "province": "云南省",
+    "city": "文山壮族苗族自治州",
+    "district": "文山市"
+  },
+  {
+    "province": "云南省",
+    "city": "普洱市",
+    "district": "思茅区"
+  },
+  {
+    "province": "云南省",
+    "city": "西双版纳傣族自治州",
+    "district": "景洪市"
+  },
+  {
+    "province": "贵州省",
+    "city": "毕节市",
+    "district": "七星关区"
+  },
+  {
+    "province": "贵州省",
+    "city": "铜仁市",
+    "district": "碧江区"
+  },
+  {
+    "province": "贵州省",
+    "city": "铜仁市",
+    "district": "万山区"
+  },
+  {
+    "province": "贵州省",
+    "city": "黔东南苗族侗族自治州",
+    "district": "凯里市"
+  },
+  {
+    "province": "贵州省",
+    "city": "黔南布依族苗族自治州",
+    "district": "都匀市"
+  },
+  {
+    "province": "贵州省",
+    "city": "黔西南布依族苗族自治州",
+    "district": "兴义市"
+  },
+  {
+    "province": "甘肃省",
+    "city": "嘉峪关市",
+    "district": "雄关区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "金昌市",
+    "district": "金川区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "白银市",
+    "district": "白银区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "白银市",
+    "district": "平川区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "武威市",
+    "district": "凉州区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "张掖市",
+    "district": "甘州区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "平凉市",
+    "district": "崆峒区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "酒泉市",
+    "district": "肃州区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "庆阳市",
+    "district": "西峰区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "定西市",
+    "district": "安定区"
+  },
+  {
+    "province": "甘肃省",
+    "city": "陇南市",
+    "district": "武都区"
+  },
+  {
+    "province": "海南省",
+    "city": "三沙市",
+    "district": "西沙区"
+  },
+  {
+    "province": "海南省",
+    "city": "儋州市",
+    "district": "那大镇"
+  },
+  {
+    "province": "海南省",
+    "city": "文昌市",
+    "district": "文城镇"
+  },
+  {
+    "province": "海南省",
+    "city": "琼海市",
+    "district": "嘉积镇"
+  },
+  {
+    "province": "海南省",
+    "city": "万宁市",
+    "district": "万城镇"
+  },
+  {
+    "province": "海南省",
+    "city": "东方市",
+    "district": "八所镇"
+  },
+  {
+    "province": "海南省",
+    "city": "五指山市",
+    "district": "通什镇"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "赤峰市",
+    "district": "红山区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "赤峰市",
+    "district": "元宝山区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "赤峰市",
+    "district": "松山区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "通辽市",
+    "district": "科尔沁区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼伦贝尔市",
+    "district": "海拉尔区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "呼伦贝尔市",
+    "district": "扎赉诺尔区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "巴彦淖尔市",
+    "district": "临河区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "乌兰察布市",
+    "district": "集宁区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "乌海市",
+    "district": "海勃湾区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "乌海市",
+    "district": "海南区"
+  },
+  {
+    "province": "内蒙古自治区",
+    "city": "乌海市",
+    "district": "乌达区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "梧州市",
+    "district": "万秀区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "梧州市",
+    "district": "长洲区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "梧州市",
+    "district": "龙圩区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "北海市",
+    "district": "海城区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "北海市",
+    "district": "银海区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "北海市",
+    "district": "铁山港区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "防城港市",
+    "district": "港口区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "防城港市",
+    "district": "防城区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "钦州市",
+    "district": "钦南区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "钦州市",
+    "district": "钦北区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "贵港市",
+    "district": "港北区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "贵港市",
+    "district": "港南区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "贵港市",
+    "district": "覃塘区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "玉林市",
+    "district": "玉州区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "玉林市",
+    "district": "福绵区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "百色市",
+    "district": "右江区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "百色市",
+    "district": "田阳区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "贺州市",
+    "district": "八步区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "贺州市",
+    "district": "平桂区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "河池市",
+    "district": "金城江区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "河池市",
+    "district": "宜州区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "来宾市",
+    "district": "兴宾区"
+  },
+  {
+    "province": "广西壮族自治区",
+    "city": "崇左市",
+    "district": "江州区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "吐鲁番市",
+    "district": "高昌区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "哈密市",
+    "district": "伊州区"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "昌吉回族自治州",
+    "district": "昌吉市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "巴音郭楞蒙古自治州",
+    "district": "库尔勒市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "阿克苏地区",
+    "district": "阿克苏市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "喀什地区",
+    "district": "喀什市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "伊犁哈萨克自治州",
+    "district": "伊宁市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "伊犁哈萨克自治州",
+    "district": "奎屯市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "塔城地区",
+    "district": "塔城市"
+  },
+  {
+    "province": "新疆维吾尔自治区",
+    "city": "阿勒泰地区",
+    "district": "阿勒泰市"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "石嘴山市",
+    "district": "大武口区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "吴忠市",
+    "district": "利通区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "吴忠市",
+    "district": "红寺堡区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "固原市",
+    "district": "原州区"
+  },
+  {
+    "province": "宁夏回族自治区",
+    "city": "中卫市",
+    "district": "沙坡头区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "拉萨市",
+    "district": "柳梧新区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "日喀则市",
+    "district": "桑珠孜区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "昌都市",
+    "district": "卡若区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "山南市",
+    "district": "乃东区"
+  },
+  {
+    "province": "西藏自治区",
+    "city": "那曲市",
+    "district": "色尼区"
+  },
+  {
+    "province": "青海省",
+    "city": "海东市",
+    "district": "乐都区"
+  },
+  {
+    "province": "青海省",
+    "city": "海东市",
+    "district": "平安区"
+  }
+]

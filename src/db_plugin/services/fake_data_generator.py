@@ -1,105 +1,346 @@
+import json
+import logging
 import random
 from datetime import datetime, timedelta
+from pathlib import Path
 
 from faker import Faker
 
 from db_plugin.core.executor import QueryExecutor
+from db_plugin.models.config import FakeDataConfig
 from db_plugin.models.schema import ColumnSchema, TableSchema
+from db_plugin.services import addresses
 
+logger = logging.getLogger(__name__)
 
-# Field name -> faker method mapping
+CONFIG_DIR = Path.home() / ".claude-code-db-plugin"
+CONFIG_FILE = CONFIG_DIR / "fake_data_config.json"
+
+# Field name -> faker method mapping (used for extra_rules default values too)
+FAKER_METHODS: list[str] = [
+    "name", "first_name", "last_name", "user_name", "email", "phone_number",
+    "address", "street_address", "city", "state", "country", "zipcode", "postalcode",
+    "company", "company_suffix", "job", "url", "ipv4", "ipv6", "mac_address",
+    "sentence", "paragraph", "text", "password", "uuid4", "date_time", "date",
+    "date_of_birth", "time", "word", "domain_name", "file_name", "file_path",
+    "color", "color_name", "currency_code", "language_name", "numerify",
+    "random_digit", "random_int", "pyfloat", "pydecimal", "pybool",
+    "credit_card_number", "bank_country", "bban", "iban", "swift",
+    "isbn13", "isbn10", "vin", "license_plate", "ssn",
+    "http_status_code", "http_method", "emoji", "md5", "sha1", "sha256",
+    "slug", "hex_color", "image_url", "language_code",
+    "latitude", "longitude", "timezone", "unix_time",
+]
+
+# Auto field name -> faker method mapping
 FIELD_NAME_RULES: dict[str, str] = {
     "name": "name",
+    "first_name": "first_name",
+    "last_name": "last_name",
+    "nickname": "first_name",
+    "full_name": "name",
     "username": "user_name",
     "email": "email",
     "phone": "phone_number",
     "mobile": "phone_number",
-    "address": "address",
+    "tel": "phone_number",
+    "fax": "phone_number",
+    "address": "address_service",
+    "street": "street_address",
     "city": "city",
+    "state": "state",
+    "province": "state",
     "country": "country",
     "zip": "zipcode",
     "postal_code": "zipcode",
     "company": "company",
+    "employer": "company",
     "url": "url",
+    "website": "url",
+    "link": "url",
     "ip": "ipv4",
+    "ip_address": "ipv4",
+    "ipv6": "ipv6",
+    "mac": "mac_address",
+    "mac_address": "mac_address",
     "title": "sentence",
+    "headline": "sentence",
+    "subject": "sentence",
     "description": "text",
     "comment": "text",
+    "content": "text",
+    "body": "paragraph",
+    "summary": "paragraph",
+    "remark": "text",
+    "note": "text",
     "password": "password",
+    "pwd": "password",
+    "secret": "password",
     "token": "uuid4",
+    "access_token": "uuid4",
+    "api_key": "sha256",
     "uuid": "uuid4",
+    "hash": "md5",
+    "checksum": "sha1",
+    "signature": "sha256",
     "created_at": "date_time",
     "updated_at": "date_time",
+    "deleted_at": "date_time",
     "date": "date",
     "birthday": "date_of_birth",
+    "birth_date": "date_of_birth",
+    "dob": "date_of_birth",
+    "time": "time",
+    "timestamp": "date_time",
+    "expire": "date_time",
+    "expires_at": "date_time",
+    "start_date": "date",
+    "end_date": "date",
+    "job": "job",
+    "occupation": "job",
+    "position": "job",
+    "role": "job",
+    "currency": "currency_code",
+    "amount": "pyfloat",
+    "price": "pyfloat",
+    "cost": "pyfloat",
+    "balance": "pyfloat",
+    "salary": "pyfloat",
+    "total": "pyfloat",
+    "fee": "pyfloat",
+    "tax": "pyfloat",
+    "discount": "pyfloat",
+    "latitude": "latitude",
+    "longitude": "longitude",
+    "lat": "latitude",
+    "lng": "longitude",
+    "color": "color_name",
+    "color_hex": "hex_color",
+    "language": "language_name",
+    "locale": "language_code",
+    "timezone": "timezone",
+    "slug": "slug",
+    "file_name": "file_name",
+    "file_path": "file_path",
+    "file_url": "image_url",
+    "avatar": "image_url",
+    "image": "image_url",
+    "icon": "image_url",
+    "isbn": "isbn13",
+    "license": "license_plate",
+    "bank": "bban",
+    "card_number": "credit_card_number",
+    "ssn": "ssn",
+    "id_card": "ssn",
 }
 
 
-def _generate_value(column: ColumnSchema, faker: Faker = None) -> any:
-    """Generate a fake value for a column, using field name rules or data type fallback."""
-    if faker is None:
-        faker = Faker()
+def load_config() -> FakeDataConfig:
+    """Load fake data config from disk."""
+    if CONFIG_FILE.exists():
+        try:
+            data = json.loads(CONFIG_FILE.read_text(encoding="utf-8"))
+            return FakeDataConfig(**data)
+        except Exception as e:
+            logger.warning("Failed to load fake data config: %s", e)
+    return FakeDataConfig()
 
-    # Try field name match
+
+def save_config(config: FakeDataConfig) -> None:
+    """Save fake data config to disk."""
+    CONFIG_DIR.mkdir(parents=True, exist_ok=True)
+    CONFIG_FILE.write_text(
+        json.dumps({
+            "time_type": config.time_type,
+            "int_mode": config.int_mode,
+            "address_file": config.address_file,
+            "extra_rules": config.extra_rules,
+        }, indent=2),
+        encoding="utf-8",
+    )
+    logger.info("Saved fake data config to %s", CONFIG_FILE)
+
+
+def _generate_time(time_type: int) -> str:
+    """Generate a datetime string based on time_type config."""
+    now = datetime.now()
+    ranges = {
+        0: (now, now),
+        1: (now - timedelta(weeks=1), now),
+        2: (now - timedelta(days=30), now),
+        3: (now - timedelta(days=365), now),
+        4: (now, now + timedelta(weeks=1)),
+        5: (now, now + timedelta(days=30)),
+        6: (now, now + timedelta(days=365)),
+        7: (now - timedelta(weeks=1), now + timedelta(weeks=1)),
+        8: (now - timedelta(days=30), now + timedelta(days=30)),
+        9: (now - timedelta(days=365), now + timedelta(days=365)),
+    }
+    start, end = ranges.get(time_type, (now, now))
+    if start == end:
+        return start.strftime("%Y-%m-%d %H:%M:%S")
+    delta = end - start
+    random_dt = start + timedelta(seconds=random.randint(0, int(delta.total_seconds())))
+    return random_dt.strftime("%Y-%m-%d %H:%M:%S")
+
+
+def _generate_int(int_mode: int) -> int:
+    """Generate a random integer based on int_mode config."""
+    if int_mode == 1:
+        return random.randint(-99999, 99999)
+    return random.randint(1, 99999)
+
+
+def _generate_json(faker: Faker) -> str:
+    """Generate a random JSON string."""
+    return faker.json_bytes().decode("utf-8")
+
+
+def _generate_enum_value(faker: Faker) -> str:
+    """Generate a plausible enum-like string value."""
+    return random.choice(["active", "inactive", "pending", "enabled", "disabled",
+                          "draft", "published", "archived", "approved", "rejected",
+                          "new", "used", "cancelled", "completed", "failed",
+                          "yes", "no", "true", "false"])
+
+
+def _generate_array(faker: Faker) -> str:
+    """Generate a random array as a string representation (for PG-style arrays)."""
+    count = random.randint(1, 4)
+    items = [faker.word() for _ in range(count)]
+    return "{" + ",".join(items) + "}"
+
+
+def _is_time_column(col_lower: str, data_type: str) -> bool:
+    """Check if column is likely a time/timestamp type."""
+    for hint in ("time", "date", "ts", "timestamp", "datetime", "at"):
+        if hint in col_lower:
+            return True
+    for hint in ("time", "date", "datetime"):
+        if hint in data_type:
+            return True
+    if data_type == "user-defined":
+        return True
+    return False
+
+
+def _is_id_auto_increment(col_lower: str, data_type: str, is_pk: bool) -> bool:
+    """Check if this is an auto-increment ID column that should be skipped."""
+    if col_lower != "id" or not is_pk:
+        return False
+    return any(t in data_type for t in ("int", "bigint", "smallint", "serial"))
+
+
+def _is_id_uuid_type(col_lower: str, data_type: str, is_pk: bool) -> bool:
+    """Check if this is a UUID/VARCHAR ID column."""
+    if col_lower != "id" or not is_pk:
+        return False
+    return any(t in data_type for t in ("varchar", "char", "uuid", "string"))
+
+
+def _generate_value(
+    column: ColumnSchema,
+    faker: Faker,
+    config: FakeDataConfig,
+) -> object:
+    """Generate a fake value for a column, using config and field name rules."""
     col_lower = column.name.lower()
-    for pattern, method_name in FIELD_NAME_RULES.items():
-        if pattern in col_lower:
+    data_type = column.data_type.lower()
+
+    # 1. Check extra_rules first (user-defined)
+    for pattern, method_name in config.extra_rules.items():
+        if pattern.lower() in col_lower:
             method = getattr(faker, method_name, None)
             if method:
                 value = method()
-                # Convert to string for database insertion where needed
                 if isinstance(value, datetime):
                     return value.strftime("%Y-%m-%d %H:%M:%S")
                 return value
 
-    # Fallback to data type
-    data_type = column.data_type.lower()
-    if data_type in ("integer", "bigint", "smallint", "serial"):
-        return random.randint(1, 99999)
-    elif data_type in ("real", "double precision", "numeric", "decimal", "float"):
-        return round(random.uniform(0, 9999), 2)
-    elif data_type in ("boolean", "bool"):
+    # 2. Check built-in field name rules
+    for pattern, method_name in FIELD_NAME_RULES.items():
+        if pattern in col_lower:
+            if method_name == "address_service":
+                return addresses.get_random_address()
+            method = getattr(faker, method_name, None)
+            if method:
+                value = method()
+                if isinstance(value, datetime):
+                    return value.strftime("%Y-%m-%d %H:%M:%S")
+                return value
+
+    # 3. Time column
+    if _is_time_column(col_lower, data_type):
+        return _generate_time(config.time_type)
+
+    # 4. Integer column
+    if data_type in ("integer", "bigint", "smallint", "serial", "int", "int2", "int4", "int8"):
+        return _generate_int(config.int_mode)
+
+    # 5. Float/numeric column
+    if data_type in ("real", "double precision", "numeric", "decimal", "float", "float4", "float8", "money"):
+        val = round(random.uniform(0, 9999), 2)
+        return val if config.int_mode == 1 or val >= 0 else -val
+
+    # 6. Boolean column
+    if data_type in ("boolean", "bool"):
         return random.choice([True, False])
-    elif data_type in ("date",):
-        start = datetime(2020, 1, 1)
-        end = datetime(2026, 12, 31)
-        delta = end - start
-        random_date = start + timedelta(seconds=random.randint(0, int(delta.total_seconds())))
-        return random_date.strftime("%Y-%m-%d")
-    elif "timestamp" in data_type:
-        start = datetime(2020, 1, 1)
-        end = datetime(2026, 12, 31)
-        delta = end - start
-        random_dt = start + timedelta(seconds=random.randint(0, int(delta.total_seconds())))
-        return random_dt.strftime("%Y-%m-%d %H:%M:%S")
-    else:
-        # Default to random string
+
+    # 7. JSON column
+    if data_type in ("json", "jsonb"):
+        return _generate_json(faker)
+
+    # 8. Enum / status-like column
+    if data_type in ("enum", "enum type", "user-defined"):
+        if not any(hint in col_lower for hint in ("time", "date", "ts", "at")):
+            return _generate_enum_value(faker)
+
+    # 9. Array column (PostgreSQL-style)
+    if data_type.startswith("array") or data_type.endswith("[]"):
+        return _generate_array(faker)
+
+    # 10. String/text column
+    if data_type in ("text", "character varying", "varchar", "char", "character", "string", "uuid"):
         return faker.word()
+
+    # 11. Binary/blob column
+    if data_type in ("blob", "bytea", "binary", "varbinary", "longblob", "mediumblob", "tinyblob"):
+        return faker.sha1()
+
+    # 12. Unknown type
+    logger.debug("Unknown data_type '%s' for column '%s', defaulting to string", column.data_type, column.name)
+    return faker.word()
 
 
 class FakeDataGenerator:
-    """Generates fake data based on table schema."""
+    """Generates fake data based on table schema and configuration."""
 
-    def __init__(self, custom_values: dict[str, any] | None = None):
-        self.custom_values = custom_values or {}
+    def __init__(self, config: FakeDataConfig | None = None):
+        self.config = config or FakeDataConfig()
         self.faker = Faker()
 
     def generate(self, table: TableSchema, count: int) -> list[dict]:
         """Generate fake records for the given table schema."""
+        logger.info("Generating %d fake records for table '%s' (columns: %d, config.time_type=%d, config.int_mode=%d)",
+                     count, table.name, len(table.columns), self.config.time_type, self.config.int_mode)
+        for col in table.columns:
+            logger.debug("Column '%s' -> data_type='%s', is_nullable=%s, is_pk=%s",
+                         col.name, col.data_type, col.is_nullable, col.is_primary_key)
+
         records = []
         for _ in range(count):
             record = {}
             for col in table.columns:
-                if col.name in self.custom_values:
-                    record[col.name] = self.custom_values[col.name]
-                elif col.is_primary_key:
-                    # Skip primary key if auto-increment, or generate UUID
-                    if "uuid" in col.name.lower():
-                        record[col.name] = str(self.faker.uuid4())
-                    # else: let the database handle auto-increment
-                else:
-                    record[col.name] = _generate_value(col, self.faker)
+                if _is_id_auto_increment(col.name.lower(), col.data_type.lower(), col.is_primary_key):
+                    # Skip auto-increment ID — let DB generate it
+                    logger.debug("Skipping auto-increment column '%s'", col.name)
+                    continue
+                if _is_id_uuid_type(col.name.lower(), col.data_type.lower(), col.is_primary_key):
+                    record[col.name] = str(self.faker.uuid4())
+                    continue
+                record[col.name] = _generate_value(col, self.faker, self.config)
             records.append(record)
+        logger.info("Fake data generation complete: %d records", len(records))
         return records
 
     def generate_and_insert(
@@ -109,17 +350,21 @@ class FakeDataGenerator:
         executor: QueryExecutor,
     ) -> int:
         """Generate fake data and insert into the database. Returns count of inserted rows."""
+        logger.info("Generating and inserting %d fake records into table '%s'", count, table.name)
         records = self.generate(table, count)
         dialect = executor.connection.get_dialect()
         inserted = 0
+        errors = 0
         for record in records:
-            # Only insert non-primary-key columns if PK is auto-increment
             insert_data = {
                 k: v for k, v in record.items()
-                if not any(c.name == k and c.is_primary_key for c in table.columns)
-                or v is not None
+                if v is not None
             }
             result = dialect.insert(table.name, insert_data)
             if result.error_message is None:
                 inserted += 1
+            else:
+                errors += 1
+                logger.warning("Failed to insert fake record into '%s': %s", table.name, result.error_message)
+        logger.info("Fake data insert complete: %d inserted, %d errors", inserted, errors)
         return inserted

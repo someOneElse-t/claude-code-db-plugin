@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtWidgets import (
     QDialog,
     QVBoxLayout,
@@ -17,6 +19,8 @@ from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.import_export import ImportExportService
 from db_plugin.services.crud_service import CRUDService
 from db_plugin.core.executor import QueryExecutor
+
+logger = logging.getLogger(__name__)
 
 
 class ImportExportDialog(QDialog):
@@ -112,6 +116,7 @@ class ImportExportDialog(QDialog):
 
         if self.mode == "export":
             table = self.table_combo.currentText()
+            logger.info("Exporting table '%s' to %s", table, filepath)
             crud = CRUDService(executor)
             result = crud.read_records(table, limit=10000)
             if result.error_message:
@@ -127,12 +132,14 @@ class ImportExportDialog(QDialog):
                 service.export_json(result, filepath)
 
             QMessageBox.information(self, "\u6210\u529f", f"\u5df2\u5bfc\u51fa\u5230 {filepath}")
+            logger.info("Export to %s complete", filepath)
         else:
             table = self.table_combo.currentText()
             if not table:
                 QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u8f93\u5165\u76ee\u6807\u8868\u540d")
                 return
 
+            logger.info("Importing from %s into table '%s'", filepath, table)
             fmt = self._get_format()
             if fmt == "csv":
                 count = service.import_csv(filepath, table)
@@ -143,3 +150,4 @@ class ImportExportDialog(QDialog):
                 return
 
             QMessageBox.information(self, "\u6210\u529f", f"\u5df2\u5bfc\u5165 {count} \u6761\u8bb0\u5f55")
+            logger.info("Import complete: %d rows into '%s'", count, table)
