@@ -16,6 +16,25 @@ logger = logging.getLogger(__name__)
 CONFIG_DIR = Path.home() / ".claude-code-db-plugin"
 CONFIG_FILE = CONFIG_DIR / "fake_data_config.json"
 
+# Cache for rule file contents: {file_path: [line1, line2, ...]}
+_rule_file_cache: dict[str, list[str]] = {}
+
+
+def _read_random_value_from_file(file_path: str) -> str:
+    """Read a random line from a CSV-like rule file (one value per line)."""
+    if file_path not in _rule_file_cache:
+        try:
+            lines = Path(file_path).read_text(encoding="utf-8").splitlines()
+            lines = [l.strip() for l in lines if l.strip()]
+            if not lines:
+                logger.warning("Rule file '%s' is empty or unreadable", file_path)
+                return ""
+            _rule_file_cache[file_path] = lines
+        except Exception as e:
+            logger.warning("Failed to read rule file '%s': %s", file_path, e)
+            return ""
+    return random.choice(_rule_file_cache[file_path])
+
 # Field name -> faker method mapping (used for extra_rules default values too)
 FAKER_METHODS: list[str] = [
     "name", "first_name", "last_name", "user_name", "email", "phone_number",
@@ -155,6 +174,7 @@ def save_config(config: FakeDataConfig) -> None:
             "int_mode": config.int_mode,
             "address_file": config.address_file,
             "extra_rules": config.extra_rules,
+            "rule_files": config.rule_files,
         }, indent=2),
         encoding="utf-8",
     )
@@ -263,6 +283,10 @@ def _generate_value(
                 if isinstance(value, datetime):
                     return value.strftime("%Y-%m-%d %H:%M:%S")
                 return value
+
+    # 1b. Check rule file mapping (column-specific rule files take priority)
+    if col_lower in config.rule_files:
+        return _read_random_value_from_file(config.rule_files[col_lower])
 
     # 2. Time column (timestamp/datetime) — checked before name-based rules
     #    to prevent FIELD_NAME_RULES["time"] from generating wrong format.

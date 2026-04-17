@@ -39,3 +39,4 @@ class FakeDataConfig:
     int_mode: int = 0
     address_file: str = ""
     extra_rules: dict = field(default_factory=dict)  # {pattern: faker_method}
+    rule_files: dict = field(default_factory=dict)   # {column_name: file_path}

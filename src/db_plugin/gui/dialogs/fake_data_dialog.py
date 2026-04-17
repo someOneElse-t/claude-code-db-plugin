@@ -1,5 +1,6 @@
 import logging
 
+from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
     QVBoxLayout,
@@ -12,11 +13,13 @@ from PySide6.QtWidgets import (
     QTableWidget,
     QTableWidgetItem,
     QMessageBox,
+    QWidget,
     QTabWidget,
     QGroupBox,
     QLineEdit,
     QFileDialog,
     QHeaderView,
+    QStyledItemDelegate,
 )
 
 from db_plugin.models.config import FakeDataConfig, TIME_TYPE_LABELS, INT_MODE_LABELS
@@ -26,6 +29,44 @@ from db_plugin.services.fake_data_generator import FakeDataGenerator, load_confi
 from db_plugin.core.executor import QueryExecutor
 
 logger = logging.getLogger(__name__)
+
+
+class ColumnComboDelegate(QStyledItemDelegate):
+    """A delegate that shows a QComboBox with available column names in a table cell."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self._all_columns: list[str] = []
+
+    def set_columns(self, columns: list[str]) -> None:
+        self._all_columns = columns
+
+    def createEditor(self, parent, option, index):
+        combo = QComboBox(parent)
+        table = self.parent()
+        used_columns = set()
+        for row in range(table.rowCount()):
+            if row != index.row():
+                item = table.item(row, 0)
+                if item:
+                    val = item.text().strip()
+                    if val:
+                        used_columns.add(val)
+        current_val = index.data() or ""
+        combo.addItem("")
+        for col in self._all_columns:
+            if col not in used_columns or col == current_val:
+                combo.addItem(col)
+        return combo
+
+    def setEditorData(self, editor, index):
+        val = index.data() or ""
+        idx = editor.findText(val)
+        if idx >= 0:
+            editor.setCurrentIndex(idx)
+
+    def setModelData(self, editor, model, index):
+        model.setData(index, editor.currentText(), Qt.EditRole)
 
 
 class FakeDataDialog(QDialog):
@@ -44,23 +85,24 @@ class FakeDataDialog(QDialog):
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
         self.tabs = QTabWidget()
+        layout.addWidget(self.tabs)
 
-        # Tab 1: Generation
         gen_widget = self._create_generate_tab()
         self.tabs.addTab(gen_widget, "\u751f\u6210")
 
-        # Tab 2: Configuration
         cfg_widget = self._create_config_tab()
         self.tabs.addTab(cfg_widget, "\u914d\u7f6e")
 
-        layout.addWidget(self.tabs)
+        rule_widget = self._create_rule_tab()
+        self.tabs.addTab(rule_widget, "\u89c4\u5219\u6587\u4ef6")
 
-    def _create_generate_tab(self) -> QTabWidget:
-        tab = QTabWidget()
+    def _create_generate_tab(self):
+        tab = QWidget()
         layout = QVBoxLayout()
 
         form = QFormLayout()
         self.table_combo = QComboBox()
+        self.table_combo.currentTextChanged.connect(self._on_table_changed)
         form.addRow("\u76ee\u6807\u8868:", self.table_combo)
 
         self.count_spin = QSpinBox()
@@ -91,11 +133,10 @@ class FakeDataDialog(QDialog):
         tab.setLayout(layout)
         return tab
 
-    def _create_config_tab(self) -> QTabWidget:
-        tab = QTabWidget()
+    def _create_config_tab(self):
+        tab = QWidget()
         layout = QVBoxLayout()
 
-        # Time type
         time_group = QGroupBox("\u65f6\u95f4\u7c7b\u578b\u914d\u7f6e")
         time_layout = QFormLayout()
         self.time_type_combo = QComboBox()
@@ -105,7 +146,6 @@ class FakeDataDialog(QDialog):
         time_group.setLayout(time_layout)
         layout.addWidget(time_group)
 
-        # Integer mode
         int_group = QGroupBox("\u6574\u5f62\u914d\u7f6e")
         int_layout = QFormLayout()
         self.int_mode_combo = QComboBox()
@@ -115,7 +155,6 @@ class FakeDataDialog(QDialog):
         int_group.setLayout(int_layout)
         layout.addWidget(int_group)
 
-        # Address file
         addr_group = QGroupBox("\u5730\u5740\u8868\u914d\u7f6e")
         addr_layout = QHBoxLayout()
         self.addr_file_edit = QLineEdit()
@@ -127,7 +166,6 @@ class FakeDataDialog(QDialog):
         addr_group.setLayout(addr_layout)
         layout.addWidget(addr_group)
 
-        # Extra rules
         rules_group = QGroupBox("\u6269\u5c55\u89c4\u5219")
         rules_layout = QVBoxLayout()
         self.rules_table = QTableWidget()
@@ -148,7 +186,6 @@ class FakeDataDialog(QDialog):
         rules_group.setLayout(rules_layout)
         layout.addWidget(rules_group)
 
-        # Save / Reset buttons
         save_layout = QHBoxLayout()
         self.save_cfg_btn = QPushButton("\u4fdd\u5b58\u914d\u7f6e")
         self.save_cfg_btn.clicked.connect(self._save_config_from_ui)
@@ -162,16 +199,84 @@ class FakeDataDialog(QDialog):
         tab.setLayout(layout)
         return tab
 
+    def _create_rule_tab(self):
+        tab = QWidget()
+        layout = QVBoxLayout()
+
+        desc_label = QLabel(
+            "\u4e3a\u6307\u5b9a\u5217\u914d\u7f6e\u89c4\u5219\u6587\u4ef6\uff08CSV\u683c\u5f0f\uff0c\u6bcf\u884c\u4e00\u4e2a\u503c\uff09\u3002"
+            "\n\u751f\u6210\u5047\u6570\u636e\u65f6\u4f1a\u4ece\u89c4\u5219\u6587\u4ef6\u4e2d\u968f\u673a\u53d6\u503c\u3002"
+        )
+        desc_label.setWordWrap(True)
+        layout.addWidget(desc_label)
+
+        self.rule_file_table = QTableWidget()
+        self.rule_file_table.setColumnCount(2)
+        self.rule_file_table.setHorizontalHeaderLabels(["\u5217\u540d", "\u89c4\u5219\u6587\u4ef6\u8def\u5f84"])
+        self.rule_file_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        layout.addWidget(self.rule_file_table)
+
+        self._column_delegate = ColumnComboDelegate(self.rule_file_table)
+        self.rule_file_table.setItemDelegateForColumn(0, self._column_delegate)
+        self.rule_file_table.itemDoubleClicked.connect(self._on_rule_file_cell_clicked)
+
+        rule_btn_layout = QHBoxLayout()
+        add_rule_file_btn = QPushButton("+ \u6dfb\u52a0")
+        add_rule_file_btn.clicked.connect(self._add_rule_file_row)
+        rule_btn_layout.addWidget(add_rule_file_btn)
+        del_rule_file_btn = QPushButton("- \u5220\u9664")
+        del_rule_file_btn.clicked.connect(self._del_rule_file_row)
+        rule_btn_layout.addWidget(del_rule_file_btn)
+        rule_btn_layout.addStretch()
+        layout.addLayout(rule_btn_layout)
+
+        tab.setLayout(layout)
+        return tab
+
+    def _on_table_changed(self, table_name: str) -> None:
+        if not table_name or not self.connection_manager.db_connection:
+            return
+        executor = QueryExecutor(self.connection_manager.db_connection)
+        crud = CRUDService(executor)
+        try:
+            schema = crud.get_schema(table_name)
+            columns = [c.name for c in schema.columns]
+            self._column_delegate.set_columns(columns)
+        except Exception as e:
+            logger.warning("Failed to get schema for table '%s': %s", table_name, e)
+
+    def _on_rule_file_cell_clicked(self, item) -> None:
+        if item.column() == 1:
+            filepath, _ = QFileDialog.getOpenFileName(
+                self, "\u9009\u62e9\u89c4\u5219\u6587\u4ef6", "",
+                "CSV (*.csv);;TXT (*.txt);;All (*)"
+            )
+            if filepath:
+                item.setText(filepath)
+
+    def _add_rule_file_row(self, column_name: str = "", file_path: str = "") -> None:
+        row = self.rule_file_table.rowCount()
+        self.rule_file_table.insertRow(row)
+        self.rule_file_table.setItem(row, 0, QTableWidgetItem(column_name))
+        self.rule_file_table.setItem(row, 1, QTableWidgetItem(file_path))
+
+    def _del_rule_file_row(self) -> None:
+        row = self.rule_file_table.currentRow()
+        if row >= 0:
+            self.rule_file_table.removeRow(row)
+
     def _load_config_to_ui(self) -> None:
         """Populate config UI from loaded config."""
         self.time_type_combo.setCurrentIndex(self.config.time_type)
         self.int_mode_combo.setCurrentIndex(self.config.int_mode)
         if self.config.address_file:
             self.addr_file_edit.setText(self.config.address_file)
-        # Populate extra rules
         self.rules_table.setRowCount(0)
         for pattern, method in self.config.extra_rules.items():
             self._add_rule_row(pattern, method)
+        self.rule_file_table.setRowCount(0)
+        for col_name, file_path in self.config.rule_files.items():
+            self._add_rule_file_row(col_name, file_path)
 
     def _save_config_from_ui(self) -> None:
         """Read config from UI and save to disk."""
@@ -190,10 +295,21 @@ class FakeDataDialog(QDialog):
                     extra[p] = m
         self.config.extra_rules = extra
 
+        rule_files = {}
+        for row in range(self.rule_file_table.rowCount()):
+            col_item = self.rule_file_table.item(row, 0)
+            file_item = self.rule_file_table.item(row, 1)
+            if col_item and file_item:
+                c = col_item.text().strip()
+                f = file_item.text().strip()
+                if c and f:
+                    rule_files[c] = f
+        self.config.rule_files = rule_files
+
         save_config(self.config)
         QMessageBox.information(self, "\u6210\u529f", "\u914d\u7f6e\u5df2\u4fdd\u5b58")
-        logger.info("Saved fake data config: time_type=%d, int_mode=%d, address_file='%s', extra_rules=%s",
-                     self.config.time_type, self.config.int_mode, self.config.address_file, extra)
+        logger.info("Saved fake data config: time_type=%d, int_mode=%d, address_file='%s', extra_rules=%s, rule_files=%s",
+                     self.config.time_type, self.config.int_mode, self.config.address_file, extra, rule_files)
 
     def _reset_config_ui(self) -> None:
         """Reset UI to defaults."""
@@ -241,6 +357,17 @@ class FakeDataDialog(QDialog):
                 if p and m:
                     extra[p] = m
         self.config.extra_rules = extra
+
+        rule_files = {}
+        for row in range(self.rule_file_table.rowCount()):
+            col_item = self.rule_file_table.item(row, 0)
+            file_item = self.rule_file_table.item(row, 1)
+            if col_item and file_item:
+                c = col_item.text().strip()
+                f = file_item.text().strip()
+                if c and f:
+                    rule_files[c] = f
+        self.config.rule_files = rule_files
 
         if self.config.address_file:
             from db_plugin.services.addresses import set_address_file
