@@ -1,5 +1,5 @@
 import json
-import os
+import logging
 from pathlib import Path
 from base64 import urlsafe_b64encode, urlsafe_b64decode
 
@@ -7,6 +7,8 @@ from cryptography.fernet import Fernet
 
 from db_plugin.core.connection import DatabaseConnection
 from db_plugin.models.config import ConnectionConfig
+
+logger = logging.getLogger(__name__)
 
 
 DEFAULT_CONFIG_DIR = Path.home() / ".claude-code-db-plugin"
@@ -58,6 +60,7 @@ class ConnectionManager:
     def add(self, config: ConnectionConfig) -> None:
         self._connections[config.name] = config
         self._save()
+        logger.info("Added connection config: %s", config.name)
 
     def remove(self, name: str) -> None:
         self._connections.pop(name, None)
@@ -65,6 +68,7 @@ class ConnectionManager:
             self._active_name = None
             self._db_connection = None
         self._save()
+        logger.info("Removed connection config: %s", name)
 
     def list(self) -> list[ConnectionConfig]:
         return list(self._connections.values())
@@ -74,12 +78,15 @@ class ConnectionManager:
 
     def test_connection(self, config: ConnectionConfig) -> tuple[bool, str]:
         """Try to connect and return (success, message)."""
+        logger.info("Testing connection to %s@%s:%s/%s", config.dialect_name, config.host, config.port, config.database)
         try:
             conn = DatabaseConnection(config)
             conn.connect()
             conn.close()
+            logger.info("Connection test successful: %s", config.name)
             return True, "Connection successful"
         except Exception as e:
+            logger.warning("Connection test failed: %s", e)
             return False, str(e)
 
     def connect(self, name: str) -> tuple[bool, str]:
@@ -90,11 +97,14 @@ class ConnectionManager:
         try:
             if self._db_connection:
                 self._db_connection.close()
+                logger.info("Closed previous active connection")
             self._db_connection = DatabaseConnection(config)
             self._db_connection.connect()
             self._active_name = name
+            logger.info("Connected to %s (%s@%s:%s/%s)", name, config.dialect_name, config.host, config.port, config.database)
             return True, f"Connected to {name}"
         except Exception as e:
+            logger.error("Failed to connect to %s: %s", name, e)
             return False, str(e)
 
     def switch_connection(self, name: str) -> None:
@@ -111,9 +121,11 @@ class ConnectionManager:
             self._db_connection.close()
             self._db_connection = None
             self._active_name = None
+            logger.info("Disconnected from active connection")
 
     def _load(self) -> None:
         if self._config_file.exists():
+            logger.info("Loading connection configs from %s", self._config_file)
             data = json.loads(self._config_file.read_text(encoding="utf-8"))
             for item in data:
                 password = item.get("password", "")
@@ -121,6 +133,9 @@ class ConnectionManager:
                     password = _decrypt(password)
                 config = ConnectionConfig(**{**item, "password": password})
                 self._connections[config.name] = config
+            logger.info("Loaded %d connection config(s)", len(self._connections))
+        else:
+            logger.info("No config file found at %s", self._config_file)
 
     def _save(self) -> None:
         self._config_file.parent.mkdir(parents=True, exist_ok=True)
@@ -138,3 +153,4 @@ class ConnectionManager:
             for c in self._connections.values()
         ]
         self._config_file.write_text(json.dumps(data, indent=2), encoding="utf-8")
+        logger.info("Saved %d connection config(s) to %s", len(self._connections), self._config_file)

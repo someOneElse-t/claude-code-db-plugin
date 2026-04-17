@@ -16,6 +16,7 @@ class ObjectTreePanel(QTreeWidget):
         self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self._show_context_menu)
         self.itemDoubleClicked.connect(self._on_item_double_clicked)
+        self.itemClicked.connect(self._on_item_clicked)
         self.refresh()
 
     def refresh(self) -> None:
@@ -35,7 +36,7 @@ class ObjectTreePanel(QTreeWidget):
             if hasattr(dialect, "current_schema"):
                 dialect.current_schema = "public"
 
-        for schema_name in schemas:
+        for schema_name in sorted(schemas):
             # Set current schema for dialect queries
             if hasattr(dialect, "current_schema"):
                 dialect.current_schema = schema_name
@@ -47,7 +48,7 @@ class ObjectTreePanel(QTreeWidget):
             # Tables node under schema
             tables_item = QTreeWidgetItem(["\u8868"])
             try:
-                tables = dialect.get_tables()
+                tables = sorted(dialect.get_tables())
                 for table in tables:
                     child = QTreeWidgetItem([table])
                     child.setData(0, Qt.UserRole, table)
@@ -60,7 +61,7 @@ class ObjectTreePanel(QTreeWidget):
             # Views node under schema
             views_item = QTreeWidgetItem(["\u89c6\u56fe"])
             try:
-                views = dialect.get_views()
+                views = sorted(dialect.get_views())
                 for view in views:
                     child = QTreeWidgetItem([view])
                     child.setData(0, Qt.UserRole, view)
@@ -71,7 +72,23 @@ class ObjectTreePanel(QTreeWidget):
             schema_item.addChild(views_item)
 
             self.addTopLevelItem(schema_item)
-            schema_item.setExpanded(True)
+            # Schemas start collapsed; expanding them loads tables
+            schema_item.setExpanded(False)
+
+    def _on_item_clicked(self, item, column) -> None:
+        """When clicking a schema node, expand it to show tables."""
+        # Check if this is a top-level schema item
+        if item.parent() is None and item.text(0) != "\u672a\u8fde\u63a5":
+            # Extract schema name from "模式: xxx"
+            text = item.text(0)
+            if text.startswith("\u6a21\u5f0f: "):
+                schema_name = text[len("\u6a21\u5f0f: "):]
+                db_conn = self.connection_manager.db_connection
+                dialect = db_conn.get_dialect()
+                if hasattr(dialect, "current_schema"):
+                    dialect.current_schema = schema_name
+                # Expand to show tables/views
+                item.setExpanded(True)
 
     def _on_item_double_clicked(self, item, column) -> None:
         parent = item.parent()

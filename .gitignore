@@ -221,3 +221,7 @@ CLAUDE.md
 
 .idea/
 docs/
+
+# Logs
+logs/
+*.log

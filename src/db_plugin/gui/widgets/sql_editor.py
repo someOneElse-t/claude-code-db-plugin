@@ -1,3 +1,4 @@
+import logging
 import time
 
 from PySide6.QtWidgets import (
@@ -17,6 +18,8 @@ from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.query_history import QueryHistoryService
 from db_plugin.core.executor import QueryExecutor
 from db_plugin.gui.widgets.data_browser import QueryResultModel
+
+logger = logging.getLogger(__name__)
 
 
 class SqlEditorWidget(QWidget):
@@ -89,8 +92,10 @@ class SqlEditorWidget(QWidget):
         if result.error_message:
             self.status_label.setText(f"\u9519\u8bef: {result.error_message}")
             self.status_label.setStyleSheet("color: red;")
+            logger.error("Query failed: %s", result.error_message)
         else:
             self.model.set_result(result.columns, result.rows)
             self.time_label.setText(f"\u8017\u65f6: {result.execution_time_ms:.0f}ms")
             self.status_label.setText(f"\u6210\u529f: {result.row_count} \u884c\u53d7\u5f71\u54cd")
             self.status_label.setStyleSheet("color: green;")
+            logger.info("Query executed in %.0fms, %d rows", result.execution_time_ms, result.row_count)

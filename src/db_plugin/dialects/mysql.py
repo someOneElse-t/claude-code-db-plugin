@@ -111,7 +111,8 @@ class MySQLDialect(DialectBase):
                 data_type,
                 is_nullable,
                 column_default AS default_value,
-                column_key = 'PRI' AS is_primary_key
+                column_key = 'PRI' AS is_primary_key,
+                column_comment AS comment
             FROM information_schema.columns
             WHERE table_name = %s
             AND table_schema = DATABASE()
@@ -127,6 +128,7 @@ class MySQLDialect(DialectBase):
                 is_nullable=row["is_nullable"] == "YES",
                 default_value=row["default_value"],
                 is_primary_key=row["is_primary_key"],
+                comment=row.get("comment") or "",
             ))
         return columns
 

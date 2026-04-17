@@ -1,3 +1,5 @@
+import logging
+
 from PySide6.QtWidgets import (
     QMainWindow,
     QMenuBar,
@@ -16,6 +18,8 @@ from db_plugin.gui.widgets.data_browser import DataBrowserWidget
 from db_plugin.gui.widgets.sql_editor import SqlEditorWidget
 from db_plugin.gui.dialogs.connection_dialog import ConnectionDialog
 from db_plugin.services.connection_manager import ConnectionManager
+
+logger = logging.getLogger(__name__)
 
 
 class MainWindow(QMainWindow):
@@ -46,6 +50,7 @@ class MainWindow(QMainWindow):
         query_menu = menubar.addMenu("\u67e5\u8be2")
         execute_action = QAction("\u6267\u884cSQL", self)
         execute_action.setShortcut("Ctrl+Return")
+        execute_action.triggered.connect(self._execute_sql)
         query_menu.addAction(execute_action)
 
         tools_menu = menubar.addMenu("\u5de5\u5177")
@@ -56,6 +61,11 @@ class MainWindow(QMainWindow):
         about_action = QAction("\u5173\u4e8e", self)
         about_action.triggered.connect(self._show_about)
         help_menu.addAction(about_action)
+
+    def _execute_sql(self) -> None:
+        """Execute the current SQL in the editor."""
+        logger.info("User triggered SQL execution")
+        self.sql_editor._execute()
 
     def _setup_toolbar(self) -> None:
         toolbar = QToolBar("Main Toolbar", self)

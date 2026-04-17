@@ -123,11 +123,11 @@ class KingbaseDialect(DialectBase):
         result = self.execute_query(
             """
             SELECT
-                column_name as name,
-                data_type,
-                is_nullable,
-                column_default as default_value,
-                column_name IN (
+                c.column_name AS name,
+                c.data_type,
+                c.is_nullable,
+                c.column_default AS default_value,
+                c.column_name IN (
                     SELECT column_name
                     FROM information_schema.key_column_usage
                     WHERE table_name = %s
@@ -139,14 +139,36 @@ class KingbaseDialect(DialectBase):
                         AND table_name = %s
                         AND table_schema = %s
                     )
-                ) as is_primary_key
-            FROM information_schema.columns
-            WHERE table_name = %s
-            AND table_schema = %s
-            ORDER BY ordinal_position
+                ) AS is_primary_key,
+                col_description(
+                    (quote_ident(%s) || '.' || quote_ident(%s))::regclass,
+                    c.ordinal_position
+                ) AS comment
+            FROM information_schema.columns c
+            WHERE c.table_name = %s
+            AND c.table_schema = %s
+            ORDER BY c.ordinal_position
             """,
-            (table_name, schema, table_name, schema, table_name, schema),
+            (table_name, schema, table_name, schema, schema, table_name, table_name, schema),
         )
+        if result.error_message:
+            # Fallback: try without comment (for cases where regclass cast fails)
+            result = self.execute_query(
+                """
+                SELECT
+                    c.column_name AS name,
+                    c.data_type,
+                    c.is_nullable,
+                    c.column_default AS default_value,
+                    FALSE AS is_primary_key,
+                    '' AS comment
+                FROM information_schema.columns c
+                WHERE c.table_name = %s
+                AND c.table_schema = %s
+                ORDER BY c.ordinal_position
+                """,
+                (table_name, schema),
+            )
         columns = []
         for row in result.rows:
             columns.append(ColumnSchema(
@@ -155,6 +177,7 @@ class KingbaseDialect(DialectBase):
                 is_nullable=row["is_nullable"] == "YES",
                 default_value=row["default_value"],
                 is_primary_key=row["is_primary_key"],
+                comment=row.get("comment") or "",
             ))
         return columns
 
