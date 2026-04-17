@@ -23,14 +23,16 @@ class KingbaseDialect(DialectBase):
         self._connection: Any = None
 
     def connect(self, config: ConnectionConfig) -> Any:
-        self._connection = psycopg2.connect(
-            host=config.host,
-            port=config.port,
-            user=config.username,
-            password=config.password,
-            dbname=config.database,
+        params = {
+            "host": config.host,
+            "port": config.port,
+            "user": config.username,
+            "password": config.password,
+            "dbname": config.database,
+            "sslmode": "allow",  # try non-SSL first, fallback to SSL
             **config.extra_params,
-        )
+        }
+        self._connection = psycopg2.connect(**params)
         self._connection.autocommit = False
         return self._connection
 

@@ -13,10 +13,13 @@ from PySide6.QtWidgets import (
     QListWidget,
     QListWidgetItem,
 )
+from PySide6.QtCore import Qt
 
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.models.config import ConnectionConfig
 from db_plugin.dialects import DIALECT_REGISTRY
+
+DEFAULT_PORTS = {"mysql": 3306, "kingbase": 54321}
 
 
 class ConnectionDialog(QDialog):
@@ -61,7 +64,7 @@ class ConnectionDialog(QDialog):
         self.host_edit = QLineEdit("localhost")
         self.port_spin = QSpinBox()
         self.port_spin.setRange(1, 65535)
-        self.port_spin.setValue(54321)
+        self.port_spin.setValue(3306)
         self.username_edit = QLineEdit()
         self.password_edit = QLineEdit()
         self.password_edit.setEchoMode(QLineEdit.Password)
@@ -92,18 +95,23 @@ class ConnectionDialog(QDialog):
         self.test_btn.clicked.connect(self._test_connection)
         self.save_btn.clicked.connect(self._save_connection)
         self.conn_list.currentItemChanged.connect(self._load_connection)
+        self.dialect_combo.currentTextChanged.connect(self._on_dialect_changed)
 
     def _populate_saved_connections(self) -> None:
         self.conn_list.clear()
         for config in self.connection_manager.list():
             item = QListWidgetItem(f"{config.name} ({config.dialect_name}@{config.host}:{config.port})")
-            item.setData(32, config.name)
+            item.setData(Qt.UserRole, config.name)
             self.conn_list.addItem(item)
+
+    def _on_dialect_changed(self, dialect: str) -> None:
+        default_port = DEFAULT_PORTS.get(dialect, 54321)
+        self.port_spin.setValue(default_port)
 
     def _clear_form(self) -> None:
         self.name_edit.clear()
         self.host_edit.setText("localhost")
-        self.port_spin.setValue(54321)
+        self._on_dialect_changed(self.dialect_combo.currentText())
         self.username_edit.clear()
         self.password_edit.clear()
         self.database_edit.clear()
@@ -111,7 +119,7 @@ class ConnectionDialog(QDialog):
     def _load_connection(self, current, previous) -> None:
         if current is None:
             return
-        name = current.data(32)
+        name = current.data(Qt.UserRole)
         config = self.connection_manager.get(name)
         if config:
             self.name_edit.setText(config.name)
@@ -143,7 +151,7 @@ class ConnectionDialog(QDialog):
         current = self.conn_list.currentItem()
         if current is None:
             return
-        name = current.data(32)
+        name = current.data(Qt.UserRole)
         self.connection_manager.remove(name)
         self._populate_saved_connections()
 
@@ -168,7 +176,7 @@ class ConnectionDialog(QDialog):
         if current is None:
             QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u9009\u62e9\u4e00\u4e2a\u8fde\u63a5")
             return
-        name = current.data(32)
+        name = current.data(Qt.UserRole)
         success, message = self.connection_manager.connect(name)
         if success:
             QMessageBox.information(self, "\u6210\u529f", message)
