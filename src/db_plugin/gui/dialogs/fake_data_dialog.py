@@ -20,6 +20,7 @@ from PySide6.QtWidgets import (
     QFileDialog,
     QHeaderView,
     QStyledItemDelegate,
+    QProgressDialog,
 )
 
 from db_plugin.models.config import FakeDataConfig, TIME_TYPE_LABELS, INT_MODE_LABELS
@@ -414,25 +415,34 @@ class FakeDataDialog(QDialog):
         schema = crud.get_schema(table_name)
 
         generator = self._make_generator()
-        records = generator.generate(schema, count=count)
-        dialect = executor.connection.get_dialect()
-        full_table = f"{dialect.current_schema}.{table_name}"
+        batch_size = 100
+        total_batches = (count + batch_size - 1) // batch_size
+        total_inserted = 0
+        total_errors = 0
 
-        inserted = 0
-        errors = 0
-        for record in records:
-            result = dialect.insert(full_table, record)
-            if result.error_message:
-                errors += 1
-                logger.warning("Failed to insert fake record into '%s': %s", table_name, result.error_message)
-            else:
-                inserted += 1
+        progress = QProgressDialog("\u6b63\u5728\u63d2\u5165\u5047\u6570\u636e...", "\u53d6\u6d88", 0, total_batches, self)
+        progress.setWindowModality(Qt.WindowModal)
+        progress.setMinimumDuration(500)
 
-        logger.info("Fake data insert done for '%s': %d inserted, %d errors", table_name, inserted, errors)
+        for batch_idx in range(total_batches):
+            if progress.wasCanceled():
+                break
+            batch_count = min(batch_size, count - batch_idx * batch_size)
+            progress.setValue(batch_idx)
+            progress.setLabelText(f"\u6b63\u5728\u63d2\u5165\u7b2c {batch_idx + 1}/{total_batches} \u6279\uff0c\u6bcf\u6279 {batch_size} \u6761")
+
+            inserted = generator.generate_and_insert_batch(schema, batch_count, executor)
+            total_inserted += inserted
+            if inserted < batch_count:
+                total_errors += batch_count - inserted
+
+        progress.setValue(total_batches)
+
+        logger.info("Fake data insert done for '%s': %d inserted, %d errors", table_name, total_inserted, total_errors)
 
         QMessageBox.information(
             self,
             "\u5b8c\u6210",
-            f"\u5df2\u63d2\u5165 {inserted} \u6761\u8bb0\u5f55{'\uff0c\u5931\u8d25 ' + str(errors) + ' \u6761' if errors else ''}",
+            f"\u5df2\u63d2\u5165 {total_inserted} \u6761\u8bb0\u5f55{'\uff0c\u5931\u8d25 ' + str(total_errors) + ' \u6761' if total_errors else ''}",
         )
         self.accept()

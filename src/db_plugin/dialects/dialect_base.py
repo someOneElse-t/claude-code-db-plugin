@@ -75,6 +75,8 @@ class DialectBase(ABC):
         if "." in table_name:
             schema, table = table_name.split(".", 1)
             return f"{self.quote_identifier(schema)}.{self.quote_identifier(table)}"
+        if self.current_schema:
+            return f"{self.quote_identifier(self.current_schema)}.{self.quote_identifier(table_name)}"
         return self.quote_identifier(table_name)
 
     @abstractmethod

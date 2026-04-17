@@ -46,6 +46,7 @@ class MySQLDialect(DialectBase):
             charset="utf8mb4",
             **config.extra_params,
         )
+        self._current_schema = config.database or ""
         return self._connection
 
     def close(self) -> None:

@@ -17,7 +17,7 @@ class KingbaseDialect(DialectBase):
     """
 
     name: str = "kingbase"
-    quote_char: str = '"'
+    quote_char: str = "`"
 
     def __init__(self):
         self._connection: Any = None
@@ -55,6 +55,7 @@ class KingbaseDialect(DialectBase):
         }
         self._connection = psycopg2.connect(**params)
         self._connection.autocommit = False
+        self._current_schema = "public"  # Kingbase default schema
         return self._connection
 
     def close(self) -> None:
@@ -241,6 +242,8 @@ class KingbaseDialect(DialectBase):
         if "." in table_name:
             schema, table = table_name.split(".", 1)
             return f"{self.quote_identifier(schema)}.{self.quote_identifier(table)}"
+        if self.current_schema:
+            return f"{self.quote_identifier(self.current_schema)}.{self.quote_identifier(table_name)}"
         return self.quote_identifier(table_name)
 
     def get_type_mapping(self) -> dict[str, type]:
