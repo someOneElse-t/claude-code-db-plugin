@@ -8,6 +8,7 @@ from PySide6.QtWidgets import (
     QTabWidget,
     QMessageBox,
 )
+from PySide6.QtCore import Qt
 from PySide6.QtGui import QAction
 
 from db_plugin.gui.widgets.object_tree import ObjectTreePanel
@@ -94,7 +95,7 @@ class MainWindow(QMainWindow):
         self.object_tree = ObjectTreePanel(self.connection_manager)
         self.object_tree.table_selected.connect(self._on_table_selected)
         dock.setWidget(self.object_tree)
-        self.addDockWidget(2, dock)  # Left side
+        self.addDockWidget(Qt.LeftDockWidgetArea, dock)
 
     def _setup_statusbar(self) -> None:
         self.statusbar = QStatusBar()

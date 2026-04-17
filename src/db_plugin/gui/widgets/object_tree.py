@@ -1,5 +1,5 @@
 from PySide6.QtWidgets import QTreeWidget, QTreeWidgetItem, QMenu
-from PySide6.QtCore import Signal
+from PySide6.QtCore import Signal, Qt
 
 from db_plugin.services.connection_manager import ConnectionManager
 
@@ -13,7 +13,7 @@ class ObjectTreePanel(QTreeWidget):
         super().__init__()
         self.connection_manager = connection_manager
         self.setHeaderLabel("\u6570\u636e\u5e93\u5bf9\u8c61")
-        self.setContextMenuPolicy(2)  # CustomContextMenu
+        self.setContextMenuPolicy(Qt.CustomContextMenu)
         self.customContextMenuRequested.connect(self._show_context_menu)
         self.itemDoubleClicked.connect(self._on_item_double_clicked)
         self.refresh()
@@ -32,7 +32,7 @@ class ObjectTreePanel(QTreeWidget):
             tables = dialect.get_tables()
             for table in tables:
                 child = QTreeWidgetItem([table])
-                child.setData(0, 32, table)  # UserRole
+                child.setData(0, Qt.UserRole, table)
                 tables_item.addChild(child)
         except Exception:
             tables_item.addChild(QTreeWidgetItem(["\u52a0\u8f7d\u5931\u8d25"]))
