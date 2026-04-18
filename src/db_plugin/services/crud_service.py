@@ -64,9 +64,31 @@ class CRUDService:
         """Fetch table schema from the database."""
         from db_plugin.models.schema import ColumnSchema, TableSchema, IndexSchema
 
+        # Strip schema prefix if present (e.g., "public.mytable" -> "mytable")
+        table_name = table.split(".", 1)[-1] if "." in table else table
+
         dialect = self.executor.connection.get_dialect()
-        columns = dialect.get_columns(table)
-        primary_keys = dialect.get_primary_keys(table)
+
+        # Ensure dialect's current_schema matches the table's schema
+        if "." in table and hasattr(dialect, "current_schema"):
+            dialect.current_schema = table.split(".", 1)[0]
+
+        columns = dialect.get_columns(table_name)
+        primary_keys = dialect.get_primary_keys(table_name)
+
+        # If no PKs found, try querying without schema restriction
+        if not primary_keys:
+            result = dialect.execute_query(
+                f"SELECT column_name FROM information_schema.key_column_usage "
+                f"WHERE table_name = %s AND constraint_name IN ("
+                f"SELECT constraint_name FROM information_schema.table_constraints "
+                f"WHERE constraint_type = 'PRIMARY KEY' AND table_name = %s"
+                f") ORDER BY ordinal_position",
+                (table_name, table_name),
+            )
+            if not result.error_message:
+                primary_keys = [row["column_name"] for row in result.rows]
+
         return TableSchema(
             name=table,
             columns=columns,
