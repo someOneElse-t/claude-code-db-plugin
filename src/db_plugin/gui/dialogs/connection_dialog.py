@@ -35,6 +35,10 @@ class ConnectionDialog(QDialog):
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(12)
+
+        style = self.style()
 
         # Saved connections list
         list_group = QGroupBox("\u5df2\u4fdd\u5b58\u7684\u8fde\u63a5")
@@ -43,9 +47,15 @@ class ConnectionDialog(QDialog):
         list_layout.addWidget(self.conn_list)
 
         btn_layout = QVBoxLayout()
-        self.add_btn = QPushButton("\u65b0\u5efa")
-        self.delete_btn = QPushButton("\u5220\u9664")
-        self.connect_btn = QPushButton("\u8fde\u63a5")
+        self.add_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "\u65b0\u5efa"
+        )
+        self.delete_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "\u5220\u9664"
+        )
+        self.connect_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), "\u8fde\u63a5"
+        )
         btn_layout.addWidget(self.add_btn)
         btn_layout.addWidget(self.delete_btn)
         btn_layout.addWidget(self.connect_btn)
@@ -82,8 +92,12 @@ class ConnectionDialog(QDialog):
 
         # Test and save
         action_layout = QHBoxLayout()
-        self.test_btn = QPushButton("\u6d4b\u8bd5\u8fde\u63a5")
-        self.save_btn = QPushButton("\u4fdd\u5b58")
+        self.test_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogYesButton), "\u6d4b\u8bd5\u8fde\u63a5"
+        )
+        self.save_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u4fdd\u5b58"
+        )
         action_layout.addWidget(self.test_btn)
         action_layout.addWidget(self.save_btn)
         layout.addLayout(action_layout)

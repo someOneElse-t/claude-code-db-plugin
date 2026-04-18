@@ -9,9 +9,10 @@ from PySide6.QtWidgets import (
     QDockWidget,
     QTabWidget,
     QMessageBox,
+    QLabel,
 )
-from PySide6.QtCore import Qt
-from PySide6.QtGui import QAction
+from PySide6.QtCore import Qt, QSize
+from PySide6.QtGui import QAction, QIcon
 
 from db_plugin.gui.widgets.object_tree import ObjectTreePanel
 from db_plugin.gui.widgets.data_browser import DataBrowserWidget
@@ -70,25 +71,49 @@ class MainWindow(QMainWindow):
     def _setup_toolbar(self) -> None:
         toolbar = QToolBar("Main Toolbar", self)
         toolbar.setMovable(False)
+        toolbar.setIconSize(QSize(20, 20))
+        toolbar.setToolButtonStyle(Qt.ToolButtonTextBesideIcon)
 
-        connect_action = toolbar.addAction("\u8fde\u63a5\u7ba1\u7406")
+        style = self.style()
+
+        # Connection management
+        connect_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), "\u8fde\u63a5\u7ba1\u7406"
+        )
+        connect_action.setToolTip("\u7ba1\u7406\u6570\u636e\u5e93\u8fde\u63a5")
         connect_action.triggered.connect(self._show_connection_dialog)
 
         toolbar.addSeparator()
-        toolbar.addAction("\u6267\u884cSQL")
-        toolbar.addAction("\u5047\u6570\u636e")
-        toolbar.addAction("\u5bfc\u5165")
-        toolbar.addAction("\u5bfc\u51fa")
 
-        # Connect placeholder actions to real dialogs
-        actions = toolbar.actions()
-        for action in actions:
-            if action.text() == "\u5047\u6570\u636e":
-                action.triggered.connect(self._show_fake_data_dialog)
-            elif action.text() == "\u5bfc\u5165":
-                action.triggered.connect(lambda: self._show_import_export_dialog("import"))
-            elif action.text() == "\u5bfc\u51fa":
-                action.triggered.connect(lambda: self._show_import_export_dialog("export"))
+        # Execute SQL
+        exec_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_MediaPlay), "\u6267\u884cSQL"
+        )
+        exec_action.setToolTip("\u6267\u884c\u5f53\u524d SQL \u8bed\u53e5 (Ctrl+Return)")
+        exec_action.triggered.connect(self._execute_sql)
+
+        # Fake data
+        fake_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_FileDialogDetailedView), "\u5047\u6570\u636e"
+        )
+        fake_action.setToolTip("\u751f\u6210\u5047\u6570\u636e")
+        fake_action.triggered.connect(self._show_fake_data_dialog)
+
+        toolbar.addSeparator()
+
+        # Import
+        import_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), "\u5bfc\u5165"
+        )
+        import_action.setToolTip("\u4ece CSV / Excel \u5bfc\u5165\u6570\u636e")
+        import_action.triggered.connect(lambda: self._show_import_export_dialog("import"))
+
+        # Export
+        export_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u5bfc\u51fa"
+        )
+        export_action.setToolTip("\u5bfc\u51fa\u6570\u636e\u5230 CSV / Excel / JSON")
+        export_action.triggered.connect(lambda: self._show_import_export_dialog("export"))
 
         self.addToolBar(toolbar)
 
@@ -109,6 +134,12 @@ class MainWindow(QMainWindow):
 
     def _setup_statusbar(self) -> None:
         self.statusbar = QStatusBar()
+
+        # Connection status indicator (colored dot)
+        self.conn_status_label = QLabel("\u25cf ")
+        self.conn_status_label.setStyleSheet("color: #BDBDBD; font-size: 16px;")
+        self.statusbar.addWidget(self.conn_status_label)
+
         self.statusbar.showMessage("\u672a\u8fde\u63a5")
         self.setStatusBar(self.statusbar)
 
@@ -128,8 +159,10 @@ class MainWindow(QMainWindow):
             self.statusbar.showMessage(
                 f"\u5df2\u8fde\u63a5: {config.dialect_name}@{config.host}:{config.port}/{config.database}"
             )
+            self.conn_status_label.setStyleSheet("color: #4CAF50; font-size: 16px;")
         else:
             self.statusbar.showMessage("\u672a\u8fde\u63a5")
+            self.conn_status_label.setStyleSheet("color: #BDBDBD; font-size: 16px;")
 
     def _on_table_selected(self, table_name: str) -> None:
         # Set the dialect's current schema if available

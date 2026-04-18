@@ -101,6 +101,8 @@ class FakeDataDialog(QDialog):
     def _create_generate_tab(self):
         tab = QWidget()
         layout = QVBoxLayout()
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(8)
 
         form = QFormLayout()
         self.table_combo = QComboBox()
@@ -113,21 +115,33 @@ class FakeDataDialog(QDialog):
         form.addRow("\u751f\u6210\u6761\u6570:", self.count_spin)
         layout.addLayout(form)
 
-        layout.addWidget(QLabel("\u9884\u89c8:"))
+        preview_label = QLabel("\u9884\u89c8:")
+        preview_label.setStyleSheet("font-weight: bold;")
+        layout.addWidget(preview_label)
         self.preview_table = QTableWidget()
+        self.preview_table.horizontalHeader().setSectionResizeMode(QHeaderView.Stretch)
+        self.preview_table.setAlternatingRowColors(True)
         layout.addWidget(self.preview_table)
 
         btn_layout = QHBoxLayout()
-        self.preview_btn = QPushButton("\u9884\u89c8")
+        style = self.style()
+
+        self.preview_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_BrowserReload), "\u9884\u89c8"
+        )
         self.preview_btn.clicked.connect(self._preview)
         btn_layout.addWidget(self.preview_btn)
 
-        self.insert_btn = QPushButton("\u751f\u6210\u5e76\u63d2\u5165")
+        self.insert_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), "\u751f\u6210\u5e76\u63d2\u5165"
+        )
         self.insert_btn.clicked.connect(self._insert)
         btn_layout.addWidget(self.insert_btn)
 
         btn_layout.addStretch()
-        cancel_btn = QPushButton("\u53d6\u6d88")
+        cancel_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogCloseButton), "\u53d6\u6d88"
+        )
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(cancel_btn)
         layout.addLayout(btn_layout)
@@ -177,10 +191,15 @@ class FakeDataDialog(QDialog):
         rules_layout.addWidget(self.rules_table)
 
         rules_btn_layout = QHBoxLayout()
-        add_rule_btn = QPushButton("+ \u6dfb\u52a0")
+        style = self.style()
+        add_rule_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "+ \u6dfb\u52a0"
+        )
         add_rule_btn.clicked.connect(self._add_rule_row)
         rules_btn_layout.addWidget(add_rule_btn)
-        del_rule_btn = QPushButton("- \u5220\u9664")
+        del_rule_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "- \u5220\u9664"
+        )
         del_rule_btn.clicked.connect(self._del_rule_row)
         rules_btn_layout.addWidget(del_rule_btn)
         rules_btn_layout.addStretch()
@@ -189,10 +208,14 @@ class FakeDataDialog(QDialog):
         layout.addWidget(rules_group)
 
         save_layout = QHBoxLayout()
-        self.save_cfg_btn = QPushButton("\u4fdd\u5b58\u914d\u7f6e")
+        self.save_cfg_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u4fdd\u5b58\u914d\u7f6e"
+        )
         self.save_cfg_btn.clicked.connect(self._save_config_from_ui)
         save_layout.addWidget(self.save_cfg_btn)
-        self.reset_cfg_btn = QPushButton("\u91cd\u7f6e")
+        self.reset_cfg_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogResetButton), "\u91cd\u7f6e"
+        )
         self.reset_cfg_btn.clicked.connect(self._reset_config_ui)
         save_layout.addWidget(self.reset_cfg_btn)
         save_layout.addStretch()
@@ -223,10 +246,15 @@ class FakeDataDialog(QDialog):
         self.rule_file_table.itemDoubleClicked.connect(self._on_rule_file_cell_clicked)
 
         rule_btn_layout = QHBoxLayout()
-        add_rule_file_btn = QPushButton("+ \u6dfb\u52a0")
+        style = self.style()
+        add_rule_file_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "+ \u6dfb\u52a0"
+        )
         add_rule_file_btn.clicked.connect(self._add_rule_file_row)
         rule_btn_layout.addWidget(add_rule_file_btn)
-        del_rule_file_btn = QPushButton("- \u5220\u9664")
+        del_rule_file_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "- \u5220\u9664"
+        )
         del_rule_file_btn.clicked.connect(self._del_rule_file_row)
         rule_btn_layout.addWidget(del_rule_file_btn)
         rule_btn_layout.addStretch()

@@ -403,21 +403,24 @@ class DataBrowserWidget(QWidget):
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(8)
 
         # Controls
         controls = QHBoxLayout()
         self.table_label = QLabel("\u8868\u540d: \u672a\u9009\u62e9")
+        self.table_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         controls.addWidget(self.table_label)
 
         controls.addStretch()
-        self.prev_btn = QPushButton("\u4e0a\u4e00\u9875")
+        self.prev_btn = QPushButton("\u25c0 \u4e0a\u4e00\u9875")
         self.prev_btn.clicked.connect(self._prev_page)
         controls.addWidget(self.prev_btn)
 
         self.page_label = QLabel("\u7b2c 1 \u9875")
         controls.addWidget(self.page_label)
 
-        self.next_btn = QPushButton("\u4e0b\u4e00\u9875")
+        self.next_btn = QPushButton("\u4e0b\u4e00\u9875 \u25b6")
         self.next_btn.clicked.connect(self._next_page)
         controls.addWidget(self.next_btn)
 
@@ -425,30 +428,42 @@ class DataBrowserWidget(QWidget):
 
         # Edit toolbar
         edit_toolbar = QHBoxLayout()
-        self.edit_toggle_btn = QPushButton("\u7f16\u8f91\u6a21\u5f0f")
+        style = self.style()
+
+        self.edit_toggle_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_TitleBarNormalButton), "\u7f16\u8f91\u6a21\u5f0f"
+        )
         self.edit_toggle_btn.setCheckable(True)
         self.edit_toggle_btn.clicked.connect(self._toggle_edit_mode)
         self.edit_toggle_btn.setEnabled(False)
         edit_toolbar.addWidget(self.edit_toggle_btn)
 
-        self.add_row_btn = QPushButton("\u65b0\u589e\u884c")
+        self.add_row_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "\u65b0\u589e\u884c"
+        )
         self.add_row_btn.clicked.connect(self._add_row)
         self.add_row_btn.setEnabled(False)
         edit_toolbar.addWidget(self.add_row_btn)
 
-        self.delete_row_btn = QPushButton("\u5220\u9664\u884c")
+        self.delete_row_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "\u5220\u9664\u884c"
+        )
         self.delete_row_btn.clicked.connect(self._delete_row)
         self.delete_row_btn.setEnabled(False)
         edit_toolbar.addWidget(self.delete_row_btn)
 
         edit_toolbar.addStretch()
 
-        self.save_btn = QPushButton("\u4fdd\u5b58\u66f4\u6539")
+        self.save_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u4fdd\u5b58\u66f4\u6539"
+        )
         self.save_btn.clicked.connect(self._save_changes)
         self.save_btn.setEnabled(False)
         edit_toolbar.addWidget(self.save_btn)
 
-        self.discard_btn = QPushButton("\u64a4\u9500\u66f4\u6539")
+        self.discard_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogResetButton), "\u64a4\u9500\u66f4\u6539"
+        )
         self.discard_btn.clicked.connect(self._discard_changes)
         self.discard_btn.setEnabled(False)
         edit_toolbar.addWidget(self.discard_btn)
@@ -461,6 +476,8 @@ class DataBrowserWidget(QWidget):
         self.table_view.setModel(self.model)
         self.table_view.setAlternatingRowColors(True)
         self.table_view.setSortingEnabled(True)
+        self.table_view.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.table_view.verticalHeader().setDefaultSectionSize(26)
         layout.addWidget(self.table_view)
 
         # Connect model signals to update edit buttons

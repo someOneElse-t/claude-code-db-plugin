@@ -33,20 +33,29 @@ class SqlEditorWidget(QWidget):
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(8, 8, 8, 8)
+        layout.setSpacing(8)
 
         # SQL input area
         self.sql_edit = QTextEdit()
         self.sql_edit.setPlaceholderText("\u5728\u6b64\u8f93\u5165 SQL...")
-        self.sql_edit.setMinimumHeight(150)
+        self.sql_edit.setMinimumHeight(200)
+        self.sql_edit.setStyleSheet("font-family: Consolas, 'Courier New', monospace; font-size: 13px;")
         layout.addWidget(self.sql_edit)
 
         # Controls
         controls = QHBoxLayout()
-        self.execute_btn = QPushButton("\u6267\u884c (Ctrl+Return)")
+        style = self.style()
+
+        self.execute_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_MediaPlay), "\u6267\u884c (Ctrl+Return)"
+        )
         self.execute_btn.clicked.connect(self._execute)
         controls.addWidget(self.execute_btn)
 
-        self.clear_btn = QPushButton("\u6e05\u7a7a")
+        self.clear_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogResetButton), "\u6e05\u7a7a"
+        )
         self.clear_btn.clicked.connect(lambda: self.sql_edit.clear())
         controls.addWidget(self.clear_btn)
 
@@ -60,10 +69,13 @@ class SqlEditorWidget(QWidget):
         self.result_table = QTableView()
         self.result_table.setModel(self.model)
         self.result_table.setAlternatingRowColors(True)
+        self.result_table.setSelectionBehavior(QTableView.SelectionBehavior.SelectRows)
+        self.result_table.setMinimumHeight(200)
         layout.addWidget(self.result_table)
 
         # Status
         self.status_label = QLabel("\u5c31\u7eea")
+        self.status_label.setStyleSheet("padding: 4px 0;")
         layout.addWidget(self.status_label)
 
     def _execute(self) -> None:
