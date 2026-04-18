@@ -148,8 +148,12 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
             return
         from db_plugin.gui.dialogs.fake_data_dialog import FakeDataDialog
-        dialog = FakeDataDialog(self.connection_manager, parent=self)
-        dialog.exec()
+        default_table = self.data_browser.current_table or ""
+        dialog = FakeDataDialog(self.connection_manager, parent=self, default_table=default_table)
+        if dialog.exec():
+            # Refresh the data browser if a table is currently loaded
+            if self.data_browser.current_table:
+                self.data_browser._fetch_data()
 
     def _show_import_export_dialog(self, mode: str) -> None:
         if not self.connection_manager.db_connection:

@@ -73,10 +73,11 @@ class ColumnComboDelegate(QStyledItemDelegate):
 class FakeDataDialog(QDialog):
     """Dialog for generating and inserting fake data."""
 
-    def __init__(self, connection_manager: ConnectionManager, parent=None):
+    def __init__(self, connection_manager: ConnectionManager, parent=None, default_table: str = ""):
         super().__init__(parent)
         self.connection_manager = connection_manager
         self.config = load_config()
+        self._default_table = default_table
         self.setWindowTitle("\u5047\u6570\u636e\u751f\u6210\u5668")
         self.resize(600, 550)
         self._setup_ui()
@@ -341,6 +342,12 @@ class FakeDataDialog(QDialog):
         dialect = self.connection_manager.db_connection.get_dialect()
         tables = dialect.get_tables()
         self.table_combo.addItems(tables)
+        if self._default_table:
+            # current_table may be schema-qualified (e.g. "TEST.users")
+            bare_name = self._default_table.split(".")[-1] if "." in self._default_table else self._default_table
+            if bare_name in tables:
+                idx = tables.index(bare_name)
+                self.table_combo.setCurrentIndex(idx)
 
     def _make_generator(self) -> FakeDataGenerator:
         """Create a FakeDataGenerator with current config."""
