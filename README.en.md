@@ -26,14 +26,15 @@ A desktop database management GUI tool built with PySide6, featuring a pluggable
 
 ## Features
 
-- **Multi-dialect architecture** — Plugin-style dialect system with a well-defined abstract interface. Ships with Kingbase fully implemented and MySQL as a ready-to-fill placeholder.
-- **Connection management** — Save, load, test, and switch between multiple database connections. Configurations persist to `~/.claude-code-db-plugin/connections.json`.
+- **Multi-dialect architecture** — Plugin-style dialect system with a well-defined abstract interface. Ships with Kingbase and MySQL both fully implemented.
+- **Connection management** — Save, load, test, and switch between multiple database connections. Configurations persist to `~/.claude-code-db-plugin/connections.json` with **passwords encrypted using Fernet symmetric encryption**.
 - **SQL query execution** — Write and execute arbitrary SQL with parameterized queries (SQL injection safe), execution timing, result display, and automatic history tracking.
-- **CRUD operations** — Full Create / Read / Update / Delete support with automatic primary key resolution and pagination.
-- **Fake data generation** — Schema-aware generation using 20+ field name patterns (name, email, phone, address, etc.) with data type fallbacks. Preview before inserting.
+- **CRUD operations** — Full Create / Read / Update / Delete support with automatic primary key resolution and pagination. **Inline data editing with real-time PK conflict detection — auto-generates missing PKs on save**.
+- **Fake data generation** — Schema-aware generation using 20+ field name patterns (name, email, phone, address, etc.) with data type fallbacks. **4407 built-in Chinese addresses**, configurable time ranges, integer modes, custom rules, and rule files. Preview before inserting.
 - **Data import/export** — CSV, Excel, and JSON export; CSV and Excel import with automatic column mapping.
 - **Query history** — SQLite-backed local history of all executed queries with search, favorite marking, and execution metadata.
 - **Database object tree** — Left-panel dock showing tables and views, with right-click context menus and double-click to browse data.
+- **Logging system** — `RotatingFileHandler` based logging to `logs/app.log`, 5MB max per file, 3 backups kept.
 
 ## Screenshots
 
@@ -64,8 +65,10 @@ A desktop database management GUI tool built with PySide6, featuring a pluggable
 |-------|------------|---------|
 | GUI | PySide6 (Qt 6.6+) | Desktop application framework, Fusion style |
 | Database driver | psycopg2-binary (2.9+) | Kingbase connection via PostgreSQL protocol |
+| Database driver | pymysql (1.0+) | MySQL database connection |
 | Fake data | Faker (20.0+) | Realistic test data generation |
 | Excel I/O | openpyxl (3.1+) | Excel file read/write |
+| Encryption | cryptography (3.4+) | Fernet symmetric encryption for password storage |
 | Testing | pytest (7.0+) | Unit test framework |
 | Python | 3.12+ | Language runtime, PEP 695 type hints |
 
@@ -177,7 +180,12 @@ DIALECT_REGISTRY = {
 
 ### MySQLDialect Status
 
-Currently a placeholder — class structure defined with proper `name = "mysql"` and ``quote_char = "`"` ``, but all methods raise `NotImplementedError`. The test suite validates the placeholder behavior.
+**Fully implemented** using `pymysql` driver:
+- Complete metadata queries via `information_schema`
+- Parameterized CRUD operations (backtick `` ` `` identifier quoting)
+- Full MySQL type mapping (int, varchar, text, datetime, blob, etc.)
+- Transaction handling (`autocommit = False`, commit on success, rollback on error)
+- `charset=utf8mb4` support
 
 ## Data Models
 
@@ -301,7 +309,7 @@ When no field name pattern matches:
 | Database | Status | Driver | Port | Notes |
 |----------|--------|--------|------|-------|
 | **Kingbase** | Fully implemented | psycopg2 | 54321 (default) | Uses PostgreSQL protocol compatibility; queries `sys_tables` with `pg_tables` fallback |
-| **MySQL** | Placeholder | — | 3306 (default) | Class scaffolded with `` ` `` quoting; all methods raise `NotImplementedError` |
+| **MySQL** | Fully implemented | pymysql | 3306 (default) | Uses `pymysql` driver; `information_schema`-based metadata queries; `utf8mb4` support |
 
 ## Installation
 
@@ -338,8 +346,10 @@ db-plugin
 ```
 PySide6>=6.6          # Qt for Python (GUI framework)
 psycopg2-binary>=2.9  # PostgreSQL/Kingbase driver
+pymysql>=1.0          # MySQL driver
 faker>=20.0           # Fake data generation
 openpyxl>=3.1         # Excel file I/O
+cryptography>=3.4     # Password encryption
 pytest>=7.0           # Testing framework
 ```
 
@@ -380,6 +390,21 @@ Connections are stored in `~/.claude-code-db-plugin/connections.json` and surviv
    - **Alternating row colors** for readability
    - **Row count and page indicator** in the status area
 
+### 4. Editing Data
+
+1. In the Data Browser, click **编辑模式 (Edit Mode)** to enter editable state.
+2. Click **新增行 (Add Row)** to insert a blank row, or modify existing cells directly.
+3. **Primary Key editing**: PK columns are editable on new rows
+   - If left empty, a unique PK value is auto-generated on save
+   - If manually entered, conflicts are detected in real-time and rejected with a warning
+4. Modified cells show a yellow background; new rows show a green background.
+5. Available actions:
+   - **Add Row** — adds a blank row, auto-focuses on the PK column
+   - **Delete Row** — select rows or cells then click delete
+   - **Save Changes** — writes local changes to the database (deletes → updates → inserts)
+   - **Discard Changes** — reverts all local modifications
+6. Click **只读模式 (Read Only)** to exit edit mode.
+
 ### 3. Executing SQL Queries
 
 1. Switch to the **SQL Editor** tab.
@@ -393,19 +418,25 @@ Connections are stored in `~/.claude-code-db-plugin/connections.json` and surviv
 
 All executed queries are automatically recorded in the query history (SQLite-backed).
 
-### 4. Generating Fake Data
+### 5. Generating Fake Data
 
 1. Ensure you are connected to a database.
 2. Click **Tools → Fake Data Generator** or the toolbar button.
 3. Select a target table from the dropdown (populated from the current connection).
 4. Set the number of rows to generate (1–10,000).
-5. Click **Preview** to see up to 5 sample rows with generated values.
-6. Click **Generate & Insert** to generate and insert all rows.
-7. A summary dialog shows successful and failed insert counts.
+5. **Advanced options**:
+   - **Time Type**: Choose the date-time generation range (current time, 1 week ago, 1 month ago, 1 year ahead, etc. — 10 modes)
+   - **Integer Mode**: Non-negative integers or allow negative
+   - **Address File**: Specify a custom address data file (default: 4407 built-in Chinese addresses)
+   - **Custom Rules**: Configure column name pattern to Faker method mappings
+   - **Rule Files**: Configure per-column random value rules from local files
+6. Click **Preview** to see up to 5 sample rows with generated values.
+7. Click **Generate & Insert** to generate and insert all rows.
+8. A summary dialog shows successful and failed insert counts.
 
 The generator intelligently maps column names to realistic data (e.g., `email` columns get email addresses, `name` columns get person names). See the [Fake Data Generation](#fake-data-generation) section above for the full mapping.
 
-### 5. Importing and Exporting Data
+### 6. Importing and Exporting Data
 
 #### Export
 
@@ -428,7 +459,7 @@ The generator intelligently maps column names to realistic data (e.g., `email` c
 5. Enter the target table name in the **Target Table** field.
 6. Click **Import**. The summary shows the number of successfully inserted records.
 
-### 6. Query History
+### 7. Query History
 
 All SQL executions are automatically recorded with:
 - The SQL text
@@ -530,7 +561,8 @@ PYTHONPATH=src pytest tests/ -v --cov=db_plugin --cov-report=term-missing
 
 | File | Location | Purpose |
 |------|----------|---------|
-| `connections.json` | `~/.claude-code-db-plugin/connections.json` | Saved database connections (JSON array of ConnectionConfig dicts) |
+| `connections.json` | `~/.claude-code-db-plugin/connections.json` | Saved database connections (JSON array, passwords Fernet-encrypted) |
+| `.key` | `~/.claude-code-db-plugin/.key` | Fernet encryption key (auto-generated, keep secure) |
 | `history.db` | `~/.claude-code-db-plugin/history.db` | Query execution history (SQLite, `query_history` table) |
 
 Both files are created automatically on first use. The `~/.claude-code-db-plugin/` directory is created if it does not exist.
@@ -617,7 +649,6 @@ service.export_json(result, "users.json")
 
 ## Roadmap
 
-- [ ] Complete `MySQLDialect` implementation with `pymysql` or `mysql-connector-python`
 - [ ] SQL editor syntax highlighting via QScintilla integration
 - [ ] Additional dialects: PostgreSQL (native), Oracle, SQL Server
 - [ ] Connection grouping and tenant labels for multi-tenant workflows
