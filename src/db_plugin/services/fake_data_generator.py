@@ -1,6 +1,8 @@
 import json
 import logging
+import os
 import random
+import time
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -18,6 +20,30 @@ CONFIG_FILE = CONFIG_DIR / "fake_data_config.json"
 
 # Cache for rule file contents: {file_path: [line1, line2, ...]}
 _rule_file_cache: dict[str, list[str]] = {}
+
+# Process-level counter for extra uniqueness within the same microsecond
+_uuid_counter = 0
+
+
+def _generate_timestamp_uuid() -> str:
+    """Generate a 32-char UUID (no hyphens) based on timestamp + randomness.
+
+    Format: [timestamp_ms(13)] [counter(5)] [random_hex(14)]
+    - timestamp_ms: current time in milliseconds since epoch (monotonically increasing)
+    - counter: auto-incrementing counter to handle same-ms collisions
+    - random_hex: OS-level random bytes for entropy
+    """
+    global _uuid_counter
+
+    ts_ms = int(time.time() * 1000)
+    _uuid_counter += 1
+    counter = _uuid_counter % 100000
+
+    rand_hex = os.urandom(7).hex()  # 14 hex chars
+
+    # Build 32-char UUID: 13-digit timestamp + 5-digit counter + 14 random hex
+    result = f"{ts_ms:013d}{counter:05d}{rand_hex}"[:32]
+    return result
 
 
 def _read_random_value_from_file(file_path: str) -> str:
@@ -359,6 +385,9 @@ class FakeDataGenerator:
         """Generate fake records for the given table schema."""
         logger.info("Generating %d fake records for table '%s' (columns: %d, config.time_type=%d, config.int_mode=%d)",
                      count, table.name, len(table.columns), self.config.time_type, self.config.int_mode)
+
+        # Determine if 'id' column needs UUID generation
+        id_column = None
         for col in table.columns:
             col_lower = col.name.lower()
             data_type_lower = col.data_type.lower()
@@ -368,20 +397,30 @@ class FakeDataGenerator:
                 logger.info("Column '%s' (type=%s) → AUTO-INCREMENT PK: will skip (DB auto-generates)",
                             col.name, col.data_type)
             elif is_uuid_gen:
-                logger.info("Column '%s' (type=%s) → ID VARCHAR/UUID: will generate UUID (no hyphens)",
+                logger.info("Column '%s' (type=%s) → ID VARCHAR/UUID: will generate timestamp-based UUID",
                             col.name, col.data_type)
+                id_column = col.name
             else:
                 logger.debug("Column '%s' -> data_type='%s', is_nullable=%s, is_pk=%s",
                              col.name, col.data_type, col.is_nullable, col.is_primary_key)
 
+        # Pre-generate timestamp-based UUIDs in batches of 100
+        uuid_pool: list[str] = []
+        if id_column:
+            for _ in range(0, count, 100):
+                batch_count = min(100, count - len(uuid_pool))
+                uuid_pool.extend(_generate_timestamp_uuid() for _ in range(batch_count))
+
         records = []
+        uuid_index = 0
         for _ in range(count):
             record = {}
             for col in table.columns:
                 if _is_id_auto_increment(col.name.lower(), col.data_type.lower(), col.is_primary_key):
                     continue
-                if _is_id_uuid_type(col.name.lower(), col.data_type.lower(), col.is_primary_key):
-                    record[col.name] = self.faker.uuid4().replace("-", "")
+                if col.name == id_column:
+                    record[col.name] = uuid_pool[uuid_index]
+                    uuid_index += 1
                     continue
                 record[col.name] = _generate_value(col, self.faker, self.config)
             records.append(record)
@@ -455,7 +494,6 @@ class FakeDataGenerator:
                             logger.warning("Failed to insert fake record into '%s': %s", table.name, single_result.error_message)
                 else:
                     inserted += len(batch)
-                    dialect.commit()
             except Exception as e:
                 errors += len(batch)
                 logger.warning("Batch insert failed for table '%s': %s, falling back to individual", table.name, e)
