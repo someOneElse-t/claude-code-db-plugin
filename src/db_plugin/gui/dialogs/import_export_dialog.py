@@ -26,15 +26,15 @@ logger = logging.getLogger(__name__)
 class ImportExportDialog(QDialog):
     """Dialog for importing and exporting data."""
 
-    def __init__(self, connection_manager: ConnectionManager, parent=None, mode: str = "export"):
+    def __init__(self, connection_manager: ConnectionManager, parent=None, mode: str = "export", default_table: str = ""):
         super().__init__(parent)
         self.connection_manager = connection_manager
         self.mode = mode
+        self._default_table = default_table
         self.setWindowTitle("\u5bfc\u5165" if mode == "import" else "\u5bfc\u51fa")
         self.resize(400, 300)
         self._setup_ui()
-        if mode == "export":
-            self._populate_tables()
+        self._populate_tables()
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -92,13 +92,18 @@ class ImportExportDialog(QDialog):
         layout.addLayout(btn_layout)
 
     def _select_file(self) -> None:
+        fmt = self._get_format()
+        ext_map = {"csv": ".csv", "excel": ".xlsx", "json": ".json"}
+        ext = ext_map.get(fmt, ".csv")
+        table = self.table_combo.currentText() or ""
+        default_name = f"{table}{ext}" if (self.mode == "export" and table) else ""
         if self.mode == "export":
             filepath, _ = QFileDialog.getSaveFileName(
-                self, "\u4fdd\u5b58\u6587\u4ef6", "", "CSV (*.csv);;Excel (*.xlsx);;JSON (*.json)"
+                self, "\u4fdd\u5b58\u6587\u4ef6", default_name, "CSV (*.csv);;Excel (*.xlsx);;JSON (*.json)"
             )
         else:
             filepath, _ = QFileDialog.getOpenFileName(
-                self, "\u9009\u62e9\u6587\u4ef6", "", "CSV (*.csv);;Excel (*.xlsx)"
+                self, "\u9009\u62e9\u6587\u4ef6", default_name, "CSV (*.csv);;Excel (*.xlsx);;JSON (*.json)"
             )
         if filepath:
             self.file_path.setText(filepath)
@@ -107,7 +112,13 @@ class ImportExportDialog(QDialog):
         if not self.connection_manager.db_connection:
             return
         dialect = self.connection_manager.db_connection.get_dialect()
-        self.table_combo.addItems(dialect.get_tables())
+        tables = dialect.get_tables()
+        self.table_combo.addItems(tables)
+        if self._default_table:
+            bare_name = self._default_table.split(".")[-1] if "." in self._default_table else self._default_table
+            if bare_name in tables:
+                idx = tables.index(bare_name)
+                self.table_combo.setCurrentIndex(idx)
 
     def _get_format(self) -> str:
         if self.csv_radio.isChecked():
@@ -157,8 +168,8 @@ class ImportExportDialog(QDialog):
             elif fmt == "excel":
                 count = service.import_excel(filepath, table)
             else:
-                QMessageBox.warning(self, "\u63d0\u793a", "JSON \u5bfc\u5165\u6682\u4e0d\u652f\u6301")
-                return
+                count = service.import_json(filepath, table)
 
             QMessageBox.information(self, "\u6210\u529f", f"\u5df2\u5bfc\u5165 {count} \u6761\u8bb0\u5f55")
             logger.info("Import complete: %d rows into '%s'", count, table)
+            self.accept()

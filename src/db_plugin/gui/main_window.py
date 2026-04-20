@@ -193,5 +193,6 @@ class MainWindow(QMainWindow):
             QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
             return
         from db_plugin.gui.dialogs.import_export_dialog import ImportExportDialog
-        dialog = ImportExportDialog(self.connection_manager, parent=self, mode=mode)
-        dialog.exec()
+        dialog = ImportExportDialog(self.connection_manager, parent=self, mode=mode, default_table=self.data_browser.current_table)
+        if dialog.exec() and mode == "import" and self.data_browser.current_table:
+            self.data_browser._fetch_data()
