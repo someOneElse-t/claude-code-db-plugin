@@ -10,8 +10,10 @@ setup(
     install_requires=[
         "PySide6>=6.6",
         "psycopg2-binary>=2.9",
+        "pymysql>=1.0",
         "faker>=20.0",
         "openpyxl>=3.1",
+        "cryptography>=3.4",
     ],
     entry_points={
         "console_scripts": [

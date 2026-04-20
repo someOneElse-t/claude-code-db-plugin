@@ -38,12 +38,18 @@ class ImportExportDialog(QDialog):
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
+        layout.setContentsMargins(12, 12, 12, 12)
+        layout.setSpacing(12)
+
+        style = self.style()
 
         # File selection
         form = QFormLayout()
         self.file_path = QLabel("\u672a\u9009\u62e9\u6587\u4ef6")
 
-        file_btn = QPushButton("\u9009\u62e9\u6587\u4ef6")
+        file_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), "\u9009\u62e9\u6587\u4ef6"
+        )
         file_btn.clicked.connect(self._select_file)
 
         file_layout = QHBoxLayout()
@@ -70,12 +76,17 @@ class ImportExportDialog(QDialog):
 
         # Action button
         btn_layout = QHBoxLayout()
-        self.action_btn = QPushButton("\u5bfc\u5165" if self.mode == "import" else "\u5bfc\u51fa")
+        self.action_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton),
+            "\u5bfc\u5165" if self.mode == "import" else "\u5bfc\u51fa"
+        )
         self.action_btn.clicked.connect(self._execute)
         btn_layout.addWidget(self.action_btn)
 
         btn_layout.addStretch()
-        cancel_btn = QPushButton("\u53d6\u6d88")
+        cancel_btn = QPushButton(
+            style.standardIcon(style.StandardPixmap.SP_DialogCloseButton), "\u53d6\u6d88"
+        )
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(cancel_btn)
         layout.addLayout(btn_layout)

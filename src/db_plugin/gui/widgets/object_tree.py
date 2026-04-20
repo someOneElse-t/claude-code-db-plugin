@@ -17,6 +17,17 @@ class ObjectTreePanel(QTreeWidget):
         self.customContextMenuRequested.connect(self._show_context_menu)
         self.itemDoubleClicked.connect(self._on_item_double_clicked)
         self.itemClicked.connect(self._on_item_clicked)
+        self.setIndentation(20)
+        self.setAnimated(True)
+        self.setStyleSheet("""
+            QTreeWidget {
+                font-size: 13px;
+                padding: 4px;
+            }
+            QTreeWidget::item {
+                padding: 2px 4px;
+            }
+        """)
         self.refresh()
 
     def refresh(self) -> None:

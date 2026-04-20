@@ -3,10 +3,10 @@ import os
 import tempfile
 import pytest
 
-from db_plugin.models.config import ConnectionConfig
+from db_plugin.models.config import ConnectionConfig, FakeDataConfig
 from db_plugin.models.schema import ColumnSchema, TableSchema
 from db_plugin.services.connection_manager import ConnectionManager
-from db_plugin.services.fake_data_generator import FakeDataGenerator, _generate_value
+from db_plugin.services.fake_data_generator import FakeDataGenerator, _generate_value, FAKER_METHODS
 from db_plugin.services.query_history import QueryHistoryService
 
 
@@ -122,19 +122,23 @@ class TestConnectionManager:
 
 class TestFakeDataGenerator:
     def test_generate_value_by_field_name(self):
-        # name -> name
-        val = _generate_value(ColumnSchema(name="name", data_type="varchar"))
+        from faker import Faker
+        config = FakeDataConfig()
+        faker = Faker()
+        val = _generate_value(ColumnSchema(name="name", data_type="varchar"), faker, config)
         assert isinstance(val, str) and len(val) > 0
 
     def test_generate_value_by_type_fallback(self):
-        # Unknown field name, fallback to data type
-        val = _generate_value(ColumnSchema(name="unknown_col", data_type="integer"))
+        from faker import Faker
+        config = FakeDataConfig()
+        faker = Faker()
+        val = _generate_value(ColumnSchema(name="unknown_col", data_type="integer"), faker, config)
         assert isinstance(val, int)
 
-        val = _generate_value(ColumnSchema(name="unknown_col", data_type="text"))
+        val = _generate_value(ColumnSchema(name="unknown_col", data_type="text"), faker, config)
         assert isinstance(val, str)
 
-        val = _generate_value(ColumnSchema(name="unknown_col", data_type="boolean"))
+        val = _generate_value(ColumnSchema(name="unknown_col", data_type="boolean"), faker, config)
         assert isinstance(val, bool)
 
     def test_generate_data(self):
@@ -154,20 +158,18 @@ class TestFakeDataGenerator:
             assert "name" in record
             assert "email" in record
 
-    def test_generate_with_custom_values(self):
-        generator = FakeDataGenerator(
-            custom_values={"name": "\u56fa\u5b9a\u540d\u5b57"}
-        )
+    def test_generate_with_time_config(self):
+        generator = FakeDataGenerator()
         table = TableSchema(
             name="test",
             columns=[
-                ColumnSchema(name="name", data_type="varchar"),
+                ColumnSchema(name="created_at", data_type="timestamp"),
             ],
             primary_keys=[],
         )
         records = generator.generate(table, count=3)
         for record in records:
-            assert record["name"] == "\u56fa\u5b9a\u540d\u5b57"
+            assert "created_at" in record
 
 
 class TestQueryHistoryService:
