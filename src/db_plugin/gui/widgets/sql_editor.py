@@ -18,6 +18,7 @@ from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.query_history import QueryHistoryService
 from db_plugin.core.executor import QueryExecutor
 from db_plugin.gui.widgets.data_browser import QueryResultModel
+from db_plugin.gui.widgets.sql_highlighter import SqlHighlighter
 
 logger = logging.getLogger(__name__)
 
@@ -41,6 +42,7 @@ class SqlEditorWidget(QWidget):
         self.sql_edit.setPlaceholderText("\u5728\u6b64\u8f93\u5165 SQL...")
         self.sql_edit.setMinimumHeight(200)
         self.sql_edit.setStyleSheet("font-family: Consolas, 'Courier New', monospace; font-size: 13px;")
+        self.highlighter = SqlHighlighter(self.sql_edit.document())
         layout.addWidget(self.sql_edit)
 
         # Controls
