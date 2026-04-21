@@ -155,7 +155,6 @@ class SqlEditorWidget(QWidget):
         if result.error_message:
             self.status_label.setText(f"{self.tr('sql_editor', 'error')}: {result.error_message}")
             self.status_label.setStyleSheet("color: red;")
-            logger.error("Query failed: %s", result.error_message)
         else:
             self.model.set_result(result.columns, result.rows)
             self.time_label.setText(self.tr("sql_editor", "elapsed").format(time=f"{result.execution_time_ms:.0f}"))

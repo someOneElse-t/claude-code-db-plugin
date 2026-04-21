@@ -26,7 +26,8 @@ class QueryWorker(QThread):
 
     def run(self) -> None:
         """Execute the query in the background thread."""
-        logger.info("QueryWorker started: %s", self._sql[:100])
+        sql_type = self._sql.split()[0].upper() if self._sql.strip() else "?"
+        logger.info("QueryWorker started: %s (%d chars)", sql_type, len(self._sql))
         self.progress.emit("Executing...")
 
         if self._cancelled:
