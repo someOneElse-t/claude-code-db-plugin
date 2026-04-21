@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.crud_service import CRUDService
 from db_plugin.core.executor import QueryExecutor
+from db_plugin.core.query_worker import QueryWorker
 from db_plugin.gui.i18n import _t
 
 logger = logging.getLogger(__name__)
@@ -399,6 +400,7 @@ class DataBrowserWidget(QWidget):
         self._offset = 0
         self._column_comments: dict[str, str] = {}
         self._primary_keys: list[str] = []
+        self._worker = None  # Current QueryWorker
         self._setup_ui()
         self._install_header_hover()
 
@@ -490,6 +492,11 @@ class DataBrowserWidget(QWidget):
         self.model.rowsInserted.connect(self._update_edit_buttons)
         self.model.rowsRemoved.connect(self._update_edit_buttons)
 
+        # Status label
+        self.status_label = QLabel("")
+        self.status_label.setStyleSheet("padding: 4px 0;")
+        layout.addWidget(self.status_label)
+
     def _update_edit_buttons(self) -> None:
         """Update save/discard button states based on model dirty state."""
         dirty = self.model.is_dirty()
@@ -551,26 +558,62 @@ class DataBrowserWidget(QWidget):
             self._primary_keys = []
 
     def _fetch_data(self) -> None:
-        executor = QueryExecutor(self.connection_manager.db_connection)
-        crud = CRUDService(executor)
-        result = crud.read_records(self.current_table, limit=self._limit, offset=self._offset)
+        if not self.connection_manager.db_connection:
+            return
+
+        # Cancel any running query
+        if self._worker and self._worker.isRunning():
+            self._worker.cancel()
+            self._worker.wait()
+
+        dialect = self.connection_manager.db_connection.get_dialect()
+        sql = f"SELECT * FROM {dialect.quote_identifier(self.current_table)} LIMIT {self._limit} OFFSET {self._offset}"
+
+        self._worker = QueryWorker(dialect, sql)
+        self._worker.finished.connect(self._on_fetch_finished)
+        self._worker.progress.connect(lambda m: self.status_label.setText(m))
+        self._worker.error.connect(self._on_fetch_error)
+
+        self.status_label.setText("Loading...")
+        self.prev_btn.setEnabled(False)
+        self.next_btn.setEnabled(False)
+        self._worker.start()
+
+    def _on_fetch_finished(self, result) -> None:
+        """Handle fetch result."""
+        self.prev_btn.setEnabled(True)
+        self.next_btn.setEnabled(True)
+        self.status_label.setText("")
 
         if result.error_message:
             QMessageBox.critical(self, self.tr("data_browser", "error"), result.error_message)
             return
 
-        # Also fetch schema for type information
+        # Fetch schema for type information
+        executor = QueryExecutor(self.connection_manager.db_connection)
+        crud = CRUDService(executor)
         try:
             schema = crud.get_schema(self.current_table)
         except Exception:
             schema = None
 
         self.model.set_result(result.columns, result.rows, table_schema=schema)
-        self.page_label.setText(self.tr("data_browser", "page_label").format(page=self._offset // self._limit + 1, count=result.row_count))
-
+        self.page_label.setText(self.tr("data_browser", "page_label").format(
+            page=self._offset // self._limit + 1, count=result.row_count
+        ))
         self.edit_toggle_btn.setEnabled(True)
         self.add_row_btn.setEnabled(True)
         self.delete_row_btn.setEnabled(True)
+
+        self._worker = None
+
+    def _on_fetch_error(self, error_msg: str) -> None:
+        """Handle fetch error."""
+        self.prev_btn.setEnabled(True)
+        self.next_btn.setEnabled(True)
+        self.status_label.setText("")
+        QMessageBox.critical(self, self.tr("data_browser", "error"), error_msg)
+        self._worker = None
 
     def _prev_page(self) -> None:
         if self._offset > 0:
