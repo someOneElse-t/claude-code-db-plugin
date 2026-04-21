@@ -16,21 +16,22 @@ class TestLogger:
         assert lg.name == "test_logger_1"
 
     def test_setup_logger_idempotent(self):
-        """Calling setup_logger twice returns the same logger."""
+        """Calling setup_logger twice returns the same logger without duplicating handlers."""
         lg1 = setup_logger("test_logger_2")
+        handler_count_before = len(lg1.handlers)
         lg2 = setup_logger("test_logger_2")
         assert lg1 is lg2
+        assert len(lg1.handlers) == handler_count_before
 
     def test_get_logger(self):
-        """get_logger returns a child logger of the named logger."""
+        """get_logger returns a child logger that inherits from the parent."""
         root = setup_logger("test_logger_3")
         child = get_logger("test_logger_3.child")
         assert child.name == "test_logger_3.child"
+        assert child.parent is root
 
-    def test_log_level_from_env(self, monkeypatch):
-        """DB_PLUGIN_LOG_LEVEL env var sets the root level."""
-        import importlib
-        # We test the _LEVEL_MAP resolution directly to avoid module reimport issues
+    def test_level_map_contains_all_standard_levels(self):
+        """_LEVEL_MAP maps string level names to logging.* constants."""
         from db_plugin.core.logger import _LEVEL_MAP
         assert _LEVEL_MAP["DEBUG"] == logging.DEBUG
         assert _LEVEL_MAP["INFO"] == logging.INFO
