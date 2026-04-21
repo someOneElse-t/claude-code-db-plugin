@@ -19,6 +19,7 @@ from db_plugin.gui.widgets.data_browser import DataBrowserWidget
 from db_plugin.gui.widgets.sql_editor import SqlEditorWidget
 from db_plugin.gui.dialogs.connection_dialog import ConnectionDialog
 from db_plugin.services.connection_manager import ConnectionManager
+from db_plugin.gui.app import toggle_theme, get_current_theme
 
 logger = logging.getLogger(__name__)
 
@@ -53,6 +54,10 @@ class MainWindow(QMainWindow):
         execute_action.setShortcut("Ctrl+Return")
         execute_action.triggered.connect(self._execute_sql)
         query_menu.addAction(execute_action)
+
+        history_action = QAction("\u67e5\u8be2\u5386\u53f2", self)
+        history_action.triggered.connect(self._show_history)
+        query_menu.addAction(history_action)
 
         tools_menu = menubar.addMenu("\u5de5\u5177")
         fake_data_action = QAction("\u5047\u6570\u636e\u751f\u6210", self)
@@ -115,6 +120,14 @@ class MainWindow(QMainWindow):
         export_action.setToolTip("\u5bfc\u51fa\u6570\u636e\u5230 CSV / Excel / JSON")
         export_action.triggered.connect(lambda: self._show_import_export_dialog("export"))
 
+        toolbar.addSeparator()
+
+        theme_action = toolbar.addAction(
+            style.standardIcon(style.StandardPixmap.SP_DesktopIcon), "\u4e3b\u9898"
+        )
+        theme_action.setToolTip("\u5207\u6362\u660e\u6697\u4e3b\u9898")
+        theme_action.triggered.connect(self._toggle_theme)
+
         self.addToolBar(toolbar)
 
     def _setup_central_tabs(self) -> None:
@@ -151,6 +164,12 @@ class MainWindow(QMainWindow):
 
     def _show_about(self) -> None:
         QMessageBox.about(self, "\u5173\u4e8e", "Claude Code DB Plugin v0.1.0")
+
+    def _show_history(self) -> None:
+        from db_plugin.gui.dialogs.history_dialog import HistoryDialog
+        dialog = HistoryDialog(self.sql_editor.history_service, parent=self)
+        dialog.exec()
+        self._update_statusbar()
 
     def _update_statusbar(self) -> None:
         active = self.connection_manager.active_connection_name
@@ -196,3 +215,8 @@ class MainWindow(QMainWindow):
         dialog = ImportExportDialog(self.connection_manager, parent=self, mode=mode, default_table=self.data_browser.current_table)
         if dialog.exec() and mode == "import" and self.data_browser.current_table:
             self.data_browser._fetch_data()
+
+    def _toggle_theme(self) -> None:
+        new_theme = toggle_theme()
+        theme_name = "\u6697\u8272" if new_theme == "dark" else "\u660e\u4eae"
+        self.statusbar.showMessage(f"\u4e3b\u9898\u5df2\u5207\u6362\u4e3a: {theme_name}")
