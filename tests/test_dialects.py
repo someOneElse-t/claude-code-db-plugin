@@ -47,3 +47,37 @@ class TestKingbaseDialect:
         dialect = KingbaseDialect()
         result = dialect.execute_query("SELECT 1")
         assert result.error_message == "Not connected to database"
+
+
+class TestSelectNoAutoCommit:
+    """SELECT queries should not trigger commit() on the connection."""
+
+    def test_kingbase_not_connected_error_result(self):
+        dialect = KingbaseDialect()
+        result = dialect.execute_query("SELECT 1")
+        assert result.error_message == "Not connected to database"
+
+    def test_mysql_not_connected_error_result(self):
+        dialect = MySQLDialect()
+        result = dialect.execute_query("SELECT 1")
+        assert result.error_message == "Not connected to database"
+
+
+class TestDialectTransactionControl:
+    """Dialects expose commit/rollback through the abstract interface."""
+
+    def test_kingbase_commit_noop_when_not_connected(self):
+        dialect = KingbaseDialect()
+        dialect.commit()  # Should not raise
+
+    def test_kingbase_rollback_noop_when_not_connected(self):
+        dialect = KingbaseDialect()
+        dialect.rollback()  # Should not raise
+
+    def test_mysql_commit_noop_when_not_connected(self):
+        dialect = MySQLDialect()
+        dialect.commit()  # Should not raise
+
+    def test_mysql_rollback_noop_when_not_connected(self):
+        dialect = MySQLDialect()
+        dialect.rollback()  # Should not raise

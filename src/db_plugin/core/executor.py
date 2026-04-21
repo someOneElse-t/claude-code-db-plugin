@@ -27,11 +27,7 @@ class QueryExecutor:
         return [self.execute(sql, params) for params in params_list]
 
     def commit(self) -> None:
-        dialect = self.connection.dialect
-        if dialect._connection:
-            dialect._connection.commit()
+        self.connection.dialect.commit()
 
     def rollback(self) -> None:
-        dialect = self.connection.dialect
-        if dialect._connection:
-            dialect._connection.rollback()
+        self.connection.dialect.rollback()

@@ -17,7 +17,8 @@ from PySide6.QtCore import Qt
 
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.models.config import ConnectionConfig
-from db_plugin.dialects import DIALECT_REGISTRY
+from db_plugin.dialects import get_available_dialects
+from db_plugin.gui.i18n import _t
 
 DEFAULT_PORTS = {"mysql": 3306, "kingbase": 54321}
 
@@ -28,10 +29,13 @@ class ConnectionDialog(QDialog):
     def __init__(self, connection_manager: ConnectionManager, parent=None):
         super().__init__(parent)
         self.connection_manager = connection_manager
-        self.setWindowTitle("\u8fde\u63a5\u7ba1\u7406")
+        self.setWindowTitle(_t("dialogs", "connection_manager"))
         self.resize(500, 400)
         self._setup_ui()
         self._populate_saved_connections()
+
+    def tr(self, context: str, key: str) -> str:
+        return _t(context, key)
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -41,20 +45,20 @@ class ConnectionDialog(QDialog):
         style = self.style()
 
         # Saved connections list
-        list_group = QGroupBox("\u5df2\u4fdd\u5b58\u7684\u8fde\u63a5")
+        list_group = QGroupBox(self.tr("dialogs", "saved_connections"))
         list_layout = QHBoxLayout()
         self.conn_list = QListWidget()
         list_layout.addWidget(self.conn_list)
 
         btn_layout = QVBoxLayout()
         self.add_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "\u65b0\u5efa"
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), self.tr("dialogs", "new")
         )
         self.delete_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "\u5220\u9664"
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), self.tr("dialogs", "delete")
         )
         self.connect_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), "\u8fde\u63a5"
+            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), self.tr("dialogs", "connect")
         )
         btn_layout.addWidget(self.add_btn)
         btn_layout.addWidget(self.delete_btn)
@@ -65,12 +69,12 @@ class ConnectionDialog(QDialog):
         layout.addWidget(list_group)
 
         # Connection form
-        form_group = QGroupBox("\u8fde\u63a5\u914d\u7f6e")
+        form_group = QGroupBox(self.tr("dialogs", "connection_config"))
         form = QFormLayout()
 
         self.name_edit = QLineEdit()
         self.dialect_combo = QComboBox()
-        self.dialect_combo.addItems(DIALECT_REGISTRY.keys())
+        self.dialect_combo.addItems(get_available_dialects())
         self.host_edit = QLineEdit("localhost")
         self.port_spin = QSpinBox()
         self.port_spin.setRange(1, 65535)
@@ -80,23 +84,23 @@ class ConnectionDialog(QDialog):
         self.password_edit.setEchoMode(QLineEdit.Password)
         self.database_edit = QLineEdit()
 
-        form.addRow("\u540d\u79f0:", self.name_edit)
-        form.addRow("\u65b9\u8a00:", self.dialect_combo)
-        form.addRow("\u4e3b\u673a:", self.host_edit)
-        form.addRow("\u7aef\u53e3:", self.port_spin)
-        form.addRow("\u7528\u6237\u540d:", self.username_edit)
-        form.addRow("\u5bc6\u7801:", self.password_edit)
-        form.addRow("\u6570\u636e\u5e93:", self.database_edit)
+        form.addRow(self.tr("dialogs", "name") + ":", self.name_edit)
+        form.addRow(self.tr("dialogs", "dialect") + ":", self.dialect_combo)
+        form.addRow(self.tr("dialogs", "host") + ":", self.host_edit)
+        form.addRow(self.tr("dialogs", "port") + ":", self.port_spin)
+        form.addRow(self.tr("dialogs", "username") + ":", self.username_edit)
+        form.addRow(self.tr("dialogs", "password") + ":", self.password_edit)
+        form.addRow(self.tr("dialogs", "database") + ":", self.database_edit)
         form_group.setLayout(form)
         layout.addWidget(form_group)
 
         # Test and save
         action_layout = QHBoxLayout()
         self.test_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogYesButton), "\u6d4b\u8bd5\u8fde\u63a5"
+            style.standardIcon(style.StandardPixmap.SP_DialogYesButton), self.tr("dialogs", "test_connection")
         )
         self.save_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u4fdd\u5b58"
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), self.tr("dialogs", "save")
         )
         action_layout.addWidget(self.test_btn)
         action_layout.addWidget(self.save_btn)
@@ -155,11 +159,11 @@ class ConnectionDialog(QDialog):
             database=self.database_edit.text(),
         )
         if not config.name:
-            QMessageBox.warning(self, "\u9519\u8bef", "\u8fde\u63a5\u540d\u79f0\u4e0d\u80fd\u4e3a\u7a7a")
+            QMessageBox.warning(self, self.tr("dialogs", "error"), self.tr("dialogs", "name_required"))
             return
         self.connection_manager.add(config)
         self._populate_saved_connections()
-        QMessageBox.information(self, "\u6210\u529f", f"\u8fde\u63a5 '{config.name}' \u5df2\u4fdd\u5b58")
+        QMessageBox.information(self, self.tr("dialogs", "success"), self.tr("dialogs", "saved_msg").format(name=config.name))
 
     def _delete_connection(self) -> None:
         current = self.conn_list.currentItem()
@@ -181,19 +185,19 @@ class ConnectionDialog(QDialog):
         )
         success, message = self.connection_manager.test_connection(config)
         if success:
-            QMessageBox.information(self, "\u6210\u529f", message)
+            QMessageBox.information(self, self.tr("dialogs", "success"), message)
         else:
-            QMessageBox.critical(self, "\u5931\u8d25", message)
+            QMessageBox.critical(self, self.tr("dialogs", "failure"), message)
 
     def _connect(self) -> None:
         current = self.conn_list.currentItem()
         if current is None:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u9009\u62e9\u4e00\u4e2a\u8fde\u63a5")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "select_first"))
             return
         name = current.data(Qt.UserRole)
         success, message = self.connection_manager.connect(name)
         if success:
-            QMessageBox.information(self, "\u6210\u529f", message)
+            QMessageBox.information(self, self.tr("dialogs", "success"), message)
             self.accept()
         else:
-            QMessageBox.critical(self, "\u5931\u8d25", message)
+            QMessageBox.critical(self, self.tr("dialogs", "failure"), message)

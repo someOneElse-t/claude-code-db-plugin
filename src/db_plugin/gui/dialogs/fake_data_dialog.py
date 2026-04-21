@@ -1,6 +1,5 @@
 import logging
 
-from PySide6.QtCore import Qt
 from PySide6.QtWidgets import (
     QDialog,
     QVBoxLayout,
@@ -28,6 +27,7 @@ from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.crud_service import CRUDService
 from db_plugin.services.fake_data_generator import FakeDataGenerator, load_config, save_config
 from db_plugin.core.executor import QueryExecutor
+from db_plugin.gui.i18n import _t
 
 logger = logging.getLogger(__name__)
 
@@ -78,11 +78,14 @@ class FakeDataDialog(QDialog):
         self.connection_manager = connection_manager
         self.config = load_config()
         self._default_table = default_table
-        self.setWindowTitle("\u5047\u6570\u636e\u751f\u6210\u5668")
+        self.setWindowTitle(_t("fake_data", "title"))
         self.resize(600, 550)
         self._setup_ui()
         self._populate_tables()
         self._load_config_to_ui()
+
+    def tr(self, context: str, key: str) -> str:
+        return _t(context, key)
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -107,15 +110,15 @@ class FakeDataDialog(QDialog):
         form = QFormLayout()
         self.table_combo = QComboBox()
         self.table_combo.currentTextChanged.connect(self._on_table_changed)
-        form.addRow("\u76ee\u6807\u8868:", self.table_combo)
+        form.addRow(self.tr("fake_data", "target_table") + ":", self.table_combo)
 
         self.count_spin = QSpinBox()
         self.count_spin.setRange(1, 10000)
         self.count_spin.setValue(10)
-        form.addRow("\u751f\u6210\u6761\u6570:", self.count_spin)
+        form.addRow(self.tr("fake_data", "row_count") + ":", self.count_spin)
         layout.addLayout(form)
 
-        preview_label = QLabel("\u9884\u89c8:")
+        preview_label = QLabel(self.tr("fake_data", "preview") + ":")
         preview_label.setStyleSheet("font-weight: bold;")
         layout.addWidget(preview_label)
         self.preview_table = QTableWidget()
@@ -127,20 +130,20 @@ class FakeDataDialog(QDialog):
         style = self.style()
 
         self.preview_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_BrowserReload), "\u9884\u89c8"
+            style.standardIcon(style.StandardPixmap.SP_BrowserReload), self.tr("fake_data", "preview")
         )
         self.preview_btn.clicked.connect(self._preview)
         btn_layout.addWidget(self.preview_btn)
 
         self.insert_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), "\u751f\u6210\u5e76\u63d2\u5165"
+            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), self.tr("fake_data", "insert")
         )
         self.insert_btn.clicked.connect(self._insert)
         btn_layout.addWidget(self.insert_btn)
 
         btn_layout.addStretch()
         cancel_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogCloseButton), "\u53d6\u6d88"
+            style.standardIcon(style.StandardPixmap.SP_DialogCloseButton), self.tr("fake_data", "cancel")
         )
         cancel_btn.clicked.connect(self.reject)
         btn_layout.addWidget(cancel_btn)
@@ -337,7 +340,7 @@ class FakeDataDialog(QDialog):
         self.config.rule_files = rule_files
 
         save_config(self.config)
-        QMessageBox.information(self, "\u6210\u529f", "\u914d\u7f6e\u5df2\u4fdd\u5b58")
+        QMessageBox.information(self, self.tr("dialogs", "success"), self.tr("dialogs", "saved_msg").format(name="\u914d\u7f6e"))
         logger.info("Saved fake data config: time_type=%d, int_mode=%d, address_file='%s', extra_rules=%s, rule_files=%s",
                      self.config.time_type, self.config.int_mode, self.config.address_file, extra, rule_files)
 
@@ -413,7 +416,7 @@ class FakeDataDialog(QDialog):
 
     def _preview(self) -> None:
         if not self.connection_manager.db_connection:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "not_connected_warn"))
             return
 
         executor = QueryExecutor(self.connection_manager.db_connection)
@@ -431,14 +434,14 @@ class FakeDataDialog(QDialog):
 
         for i, record in enumerate(records):
             for j, col in enumerate(schema.columns):
-                value = record.get(col.name, "")
+                value = record.get(col, "")
                 self.preview_table.setItem(i, j, QTableWidgetItem(str(value)))
 
         logger.info("Fake data preview populated with %d records", len(records))
 
     def _insert(self) -> None:
         if not self.connection_manager.db_connection:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "not_connected_warn"))
             return
 
         table_name = self.table_combo.currentText()
@@ -455,7 +458,7 @@ class FakeDataDialog(QDialog):
         total_inserted = 0
         total_errors = 0
 
-        progress = QProgressDialog("\u6b63\u5728\u63d2\u5165\u5047\u6570\u636e...", "\u53d6\u6d88", 0, total_batches, self)
+        progress = QProgressDialog(self.tr("fake_data", "insert") + "...", self.tr("fake_data", "cancel"), 0, total_batches, self)
         progress.setWindowModality(Qt.WindowModal)
         progress.setMinimumDuration(500)
 
@@ -475,9 +478,10 @@ class FakeDataDialog(QDialog):
 
         logger.info("Fake data insert done for '%s': %d inserted, %d errors", table_name, total_inserted, total_errors)
 
+        errors_text = f"\uff0c\u5931\u8d25 {total_errors} \u6761" if total_errors else ""
         QMessageBox.information(
             self,
-            "\u5b8c\u6210",
-            f"\u5df2\u63d2\u5165 {total_inserted} \u6761\u8bb0\u5f55{'\uff0c\u5931\u8d25 ' + str(total_errors) + ' \u6761' if total_errors else ''}",
+            self.tr("fake_data", "done"),
+            self.tr("fake_data", "done_msg").format(inserted=total_inserted, errors=errors_text),
         )
         self.accept()
