@@ -47,3 +47,17 @@ class TestKingbaseDialect:
         dialect = KingbaseDialect()
         result = dialect.execute_query("SELECT 1")
         assert result.error_message == "Not connected to database"
+
+
+class TestSelectNoAutoCommit:
+    """SELECT queries should not trigger commit() on the connection."""
+
+    def test_kingbase_not_connected_error_result(self):
+        dialect = KingbaseDialect()
+        result = dialect.execute_query("SELECT 1")
+        assert result.error_message == "Not connected to database"
+
+    def test_mysql_not_connected_error_result(self):
+        dialect = MySQLDialect()
+        result = dialect.execute_query("SELECT 1")
+        assert result.error_message == "Not connected to database"

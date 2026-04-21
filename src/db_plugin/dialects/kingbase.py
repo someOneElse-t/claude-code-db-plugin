@@ -84,7 +84,10 @@ class KingbaseDialect(DialectBase):
                     columns = []
                     rows = []
                 row_count = cur.rowcount
-                self._connection.commit()
+                # Only commit for DML statements, not SELECT
+                sql_stripped = sql.strip().upper()
+                if sql_stripped.startswith(("INSERT", "UPDATE", "DELETE", "CREATE", "DROP", "ALTER", "TRUNCATE")):
+                    self._connection.commit()
         except Exception as e:
             self._connection.rollback()
             elapsed = (time.monotonic() - start) * 1000
