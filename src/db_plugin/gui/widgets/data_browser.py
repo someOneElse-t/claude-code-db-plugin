@@ -567,7 +567,7 @@ class DataBrowserWidget(QWidget):
             self._worker.wait()
 
         dialect = self.connection_manager.db_connection.get_dialect()
-        sql = f"SELECT * FROM {dialect.quote_identifier(self.current_table)} LIMIT {self._limit} OFFSET {self._offset}"
+        sql = f"SELECT * FROM {dialect.format_table_ref(self.current_table)} LIMIT {self._limit} OFFSET {self._offset}"
 
         self._worker = QueryWorker(dialect, sql)
         self._worker.finished.connect(self._on_fetch_finished)
