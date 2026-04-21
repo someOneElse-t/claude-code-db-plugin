@@ -18,7 +18,7 @@ dependencies = [
 ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7.0"]
+dev = ["pytest>=7.0", "pytest-cov>=4.0"]
 
 [project.scripts]
 db-plugin = "db_plugin.main:main"
@@ -35,3 +35,16 @@ testpaths = ["tests"]
 [project.entry-points."db_plugin.dialects"]
 # Third-party dialects can register themselves here:
 # kingbase = "my_kingbase_dialect:KingbaseDialect"
+
+[tool.coverage.run]
+source = ["db_plugin"]
+branch = true
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "if __name__ == .__main__.",
+    "raise NotImplementedError",
+]
+fail_under = 40
+show_missing = true
