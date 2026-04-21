@@ -3,16 +3,22 @@
 import logging
 import os
 import sys
+import warnings
+from logging.handlers import RotatingFileHandler
 from pathlib import Path
 
 LOG_DIR = Path.home() / ".claude-code-db-plugin" / "logs"
-LOG_DIR.mkdir(parents=True, exist_ok=True)
+try:
+    LOG_DIR.mkdir(parents=True, exist_ok=True)
+except OSError as e:
+    warnings.warn(f"Cannot create log directory {LOG_DIR}: {e}", RuntimeWarning)
 
 _LEVEL_MAP = {
     "DEBUG": logging.DEBUG,
     "INFO": logging.INFO,
     "WARNING": logging.WARNING,
     "ERROR": logging.ERROR,
+    "CRITICAL": logging.CRITICAL,
 }
 
 
@@ -57,15 +63,13 @@ def setup_logger(
         datefmt="%Y-%m-%d %H:%M:%S",
     )
 
-    # Console handler
+    # Console handler — matches the resolved root level
     console = logging.StreamHandler(sys.stdout)
-    console.setLevel(logging.INFO)
+    console.setLevel(level)
     console.setFormatter(fmt)
     logger.addHandler(console)
 
     # File handler — rotating, 5 MB max per file, keep 3 backups
-    from logging.handlers import RotatingFileHandler
-
     file_name = log_file or os.environ.get("DB_PLUGIN_LOG_FILE", "app.log")
     file_handler = RotatingFileHandler(
         LOG_DIR / file_name,
