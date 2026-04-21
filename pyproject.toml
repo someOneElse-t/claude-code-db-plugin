@@ -31,3 +31,7 @@ testpaths = ["tests"]
 
 [tool.setuptools.package-data]
 "db_plugin.data" = ["*.json"]
+
+[project.entry-points."db_plugin.dialects"]
+# Third-party dialects can register themselves here:
+# kingbase = "my_kingbase_dialect:KingbaseDialect"

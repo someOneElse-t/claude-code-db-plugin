@@ -17,7 +17,7 @@ from PySide6.QtCore import Qt
 
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.models.config import ConnectionConfig
-from db_plugin.dialects import DIALECT_REGISTRY
+from db_plugin.dialects import get_available_dialects
 
 DEFAULT_PORTS = {"mysql": 3306, "kingbase": 54321}
 
@@ -70,7 +70,7 @@ class ConnectionDialog(QDialog):
 
         self.name_edit = QLineEdit()
         self.dialect_combo = QComboBox()
-        self.dialect_combo.addItems(DIALECT_REGISTRY.keys())
+        self.dialect_combo.addItems(get_available_dialects())
         self.host_edit = QLineEdit("localhost")
         self.port_spin = QSpinBox()
         self.port_spin.setRange(1, 65535)
