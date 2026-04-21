@@ -19,6 +19,7 @@ from PySide6.QtWidgets import (
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.services.crud_service import CRUDService
 from db_plugin.core.executor import QueryExecutor
+from db_plugin.gui.i18n import _t
 
 logger = logging.getLogger(__name__)
 
@@ -192,8 +193,8 @@ class EditableQueryResultModel(QueryResultModel):
             if self._is_pk_conflict(row_idx, col, converted):
                 QMessageBox.warning(
                     self.parent() if hasattr(self, 'parent') else None,
-                    "主键冲突",
-                    f"主键值与已有数据重复，请更换其他值。",
+                    _t("data_browser", "pk_conflict"),
+                    _t("data_browser", "pk_conflict_msg"),
                 )
                 return False
 
@@ -248,7 +249,7 @@ class EditableQueryResultModel(QueryResultModel):
                 if str(ts_val) not in used_values:
                     return ts_val
             else:
-                # varchar/uuid/char: generate timestamp-based UUID
+                # varchar/uuid/char: generate timestamp-based UUIDs
                 ts_ms = int(time.time() * 1000)
                 rand_hex = os.urandom(8).hex()
                 val = f"{ts_ms:013d}{rand_hex}"[:32]
@@ -401,6 +402,9 @@ class DataBrowserWidget(QWidget):
         self._setup_ui()
         self._install_header_hover()
 
+    def tr(self, context: str, key: str) -> str:
+        return _t(context, key)
+
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
         layout.setContentsMargins(8, 8, 8, 8)
@@ -408,19 +412,19 @@ class DataBrowserWidget(QWidget):
 
         # Controls
         controls = QHBoxLayout()
-        self.table_label = QLabel("\u8868\u540d: \u672a\u9009\u62e9")
+        self.table_label = QLabel(self.tr("data_browser", "table_unselected"))
         self.table_label.setStyleSheet("font-weight: bold; font-size: 14px;")
         controls.addWidget(self.table_label)
 
         controls.addStretch()
-        self.prev_btn = QPushButton("\u25c0 \u4e0a\u4e00\u9875")
+        self.prev_btn = QPushButton(self.tr("data_browser", "prev_page"))
         self.prev_btn.clicked.connect(self._prev_page)
         controls.addWidget(self.prev_btn)
 
-        self.page_label = QLabel("\u7b2c 1 \u9875")
+        self.page_label = QLabel("")
         controls.addWidget(self.page_label)
 
-        self.next_btn = QPushButton("\u4e0b\u4e00\u9875 \u25b6")
+        self.next_btn = QPushButton(self.tr("data_browser", "next_page"))
         self.next_btn.clicked.connect(self._next_page)
         controls.addWidget(self.next_btn)
 
@@ -431,7 +435,7 @@ class DataBrowserWidget(QWidget):
         style = self.style()
 
         self.edit_toggle_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_TitleBarNormalButton), "\u7f16\u8f91\u6a21\u5f0f"
+            style.standardIcon(style.StandardPixmap.SP_TitleBarNormalButton), self.tr("data_browser", "edit_mode")
         )
         self.edit_toggle_btn.setCheckable(True)
         self.edit_toggle_btn.clicked.connect(self._toggle_edit_mode)
@@ -439,14 +443,14 @@ class DataBrowserWidget(QWidget):
         edit_toolbar.addWidget(self.edit_toggle_btn)
 
         self.add_row_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), "\u65b0\u589e\u884c"
+            style.standardIcon(style.StandardPixmap.SP_FileDialogNewFolder), self.tr("data_browser", "add_row")
         )
         self.add_row_btn.clicked.connect(self._add_row)
         self.add_row_btn.setEnabled(False)
         edit_toolbar.addWidget(self.add_row_btn)
 
         self.delete_row_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_TrashIcon), "\u5220\u9664\u884c"
+            style.standardIcon(style.StandardPixmap.SP_TrashIcon), self.tr("data_browser", "delete_row")
         )
         self.delete_row_btn.clicked.connect(self._delete_row)
         self.delete_row_btn.setEnabled(False)
@@ -455,14 +459,14 @@ class DataBrowserWidget(QWidget):
         edit_toolbar.addStretch()
 
         self.save_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u4fdd\u5b58\u66f4\u6539"
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), self.tr("data_browser", "save_changes")
         )
         self.save_btn.clicked.connect(self._save_changes)
         self.save_btn.setEnabled(False)
         edit_toolbar.addWidget(self.save_btn)
 
         self.discard_btn = QPushButton(
-            style.standardIcon(style.StandardPixmap.SP_DialogResetButton), "\u64a4\u9500\u66f4\u6539"
+            style.standardIcon(style.StandardPixmap.SP_DialogResetButton), self.tr("data_browser", "discard_changes")
         )
         self.discard_btn.clicked.connect(self._discard_changes)
         self.discard_btn.setEnabled(False)
@@ -517,7 +521,7 @@ class DataBrowserWidget(QWidget):
 
     def load_table(self, table_name: str) -> None:
         if not self.connection_manager.db_connection:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "not_connected_warn"))
             return
 
         # Check for unsaved changes before loading new table
@@ -527,7 +531,7 @@ class DataBrowserWidget(QWidget):
 
         self.current_table = table_name
         self._offset = 0
-        self.table_label.setText(f"\u8868\u540d: {table_name}")
+        self.table_label.setText(self.tr("data_browser", "table_label").format(table=table_name))
         logger.info("Loading table data: %s", table_name)
         self._fetch_comments()
         self._fetch_data()
@@ -552,7 +556,7 @@ class DataBrowserWidget(QWidget):
         result = crud.read_records(self.current_table, limit=self._limit, offset=self._offset)
 
         if result.error_message:
-            QMessageBox.critical(self, "\u9519\u8bef", result.error_message)
+            QMessageBox.critical(self, self.tr("data_browser", "error"), result.error_message)
             return
 
         # Also fetch schema for type information
@@ -562,7 +566,7 @@ class DataBrowserWidget(QWidget):
             schema = None
 
         self.model.set_result(result.columns, result.rows, table_schema=schema)
-        self.page_label.setText(f"\u7b2c {self._offset // self._limit + 1} \u9875 ({result.row_count} \u884c)")
+        self.page_label.setText(self.tr("data_browser", "page_label").format(page=self._offset // self._limit + 1, count=result.row_count))
 
         self.edit_toggle_btn.setEnabled(True)
         self.add_row_btn.setEnabled(True)
@@ -586,8 +590,8 @@ class DataBrowserWidget(QWidget):
         """Prompt user about unsaved changes. Returns True if safe to proceed."""
         reply = QMessageBox.warning(
             self,
-            "\u672a\u4fdd\u5b58\u7684\u66f4\u6539",
-            "\u60a8\u6709\u672a\u4fdd\u5b58\u7684\u66f4\u6539\u3002\u786e\u5b9a\u8981\u7ee7\u7eed\u5417\uff1f",
+            self.tr("data_browser", "unsaved_changes"),
+            self.tr("data_browser", "unsaved_msg"),
             QMessageBox.Save | QMessageBox.Discard | QMessageBox.Cancel,
         )
         if reply == QMessageBox.Save:
@@ -603,16 +607,16 @@ class DataBrowserWidget(QWidget):
         editable = self.edit_toggle_btn.isChecked()
         self.model.set_editable(editable)
         if editable:
-            self.edit_toggle_btn.setText("\u53ea\u8bfb\u6a21\u5f0f")
+            self.edit_toggle_btn.setText(self.tr("data_browser", "read_only"))
         else:
-            self.edit_toggle_btn.setText("\u7f16\u8f91\u6a21\u5f0f")
+            self.edit_toggle_btn.setText(self.tr("data_browser", "edit_mode"))
 
     def _add_row(self) -> None:
         """Add a new blank row at the end. Auto-enable edit mode if needed."""
         if not self.model._editable:
             self.edit_toggle_btn.setChecked(True)
             self.model.set_editable(True)
-            self.edit_toggle_btn.setText("\u53ea\u8bfb\u6a21\u5f0f")
+            self.edit_toggle_btn.setText(self.tr("data_browser", "read_only"))
 
         row_idx = self.model.add_new_row()
         # Scroll to the new row and start editing
@@ -638,7 +642,7 @@ class DataBrowserWidget(QWidget):
         if not row_indexes:
             cell_indexes = sel_model.selectedIndexes()
             if not cell_indexes:
-                QMessageBox.information(self, "\u63d0\u793a", "\u8bf7\u5148\u9009\u62e9\u8981\u5220\u9664\u7684\u884c\u6216\u5355\u5143\u683c\u3002")
+                QMessageBox.information(self, self.tr("dialogs", "prompt"), "\u8bf7\u5148\u9009\u62e9\u8981\u5220\u9664\u7684\u884c\u6216\u5355\u5143\u683c\u3002")
                 return
             # Extract unique row indices from cell selection, sorted descending for safe deletion
             row_indexes = sorted({index.row() for index in cell_indexes}, reverse=True)
@@ -648,8 +652,8 @@ class DataBrowserWidget(QWidget):
         count = len(row_indexes)
         reply = QMessageBox.question(
             self,
-            "\u786e\u8ba4\u5220\u9664",
-            f"\u786e\u5b9a\u5220\u9664 {count} \u884c\u6570\u636e\uff1f",
+            self.tr("data_browser", "confirm_delete"),
+            self.tr("data_browser", "confirm_delete_msg").format(count=count),
         )
         if reply != QMessageBox.Yes:
             return
@@ -667,18 +671,18 @@ class DataBrowserWidget(QWidget):
         conflicts = self.model.fill_missing_pks()
         if conflicts:
             conflict_rows = ", ".join(str(c + 1) for c in conflicts)
-            QMessageBox.critical(self, "\u9519\u8bef",
+            QMessageBox.critical(self, self.tr("data_browser", "error"),
                 f"\u4e3b\u952e\u51b2\u7a81\uff1a\u65b0\u589e\u7684\u7b2c {conflict_rows} \u884c\u4e3b\u952e\u4e0e\u5df2\u6709\u6570\u636e\u91cd\u590d\u3002")
             self.model.clear_dirty()
             self._fetch_data()
             self.edit_toggle_btn.setChecked(False)
-            self.edit_toggle_btn.setText("\u7f16\u8f91\u6a21\u5f0f")
+            self.edit_toggle_btn.setText(self.tr("data_browser", "edit_mode"))
             return
 
         changes = self.model.get_pending_changes()
         total = len(changes["updates"]) + len(changes["inserts"]) + len(changes["deletes"])
         if total == 0:
-            QMessageBox.information(self, "\u63d0\u793a", "\u6ca1\u6709\u5f85\u4fdd\u5b58\u7684\u66f4\u6539\u3002")
+            QMessageBox.information(self, self.tr("dialogs", "prompt"), self.tr("data_browser", "no_changes"))
             return
 
         # Build confirmation message
@@ -693,8 +697,8 @@ class DataBrowserWidget(QWidget):
 
         reply = QMessageBox.question(
             self,
-            "\u786e\u8ba4\u4fdd\u5b58",
-            f"\u60a8\u786e\u5b9a\u8981\u4fdd\u5b58\u4ee5\u4e0b\u66f4\u6539\u5417\uff1f\n\n{msg}",
+            self.tr("data_browser", "confirm_save"),
+            self.tr("data_browser", "confirm_save_msg").format(msg=msg),
         )
         if reply != QMessageBox.Yes:
             return
@@ -712,11 +716,11 @@ class DataBrowserWidget(QWidget):
                 result = crud.delete_record(self.current_table, pk_values, schema)
                 if result.error_message:
                     error_count += 1
-                    QMessageBox.critical(self, "\u9519\u8bef", f"\u5220\u9664\u5931\u8d25: {result.error_message}")
+                    QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "delete_fail").format(msg=result.error_message))
                     return
                 success_count += 1
             except Exception as e:
-                QMessageBox.critical(self, "\u9519\u8bef", f"\u5220\u9664\u5f02\u5e38: {e}")
+                QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "delete_error").format(msg=e))
                 return
 
         # 2. Execute updates
@@ -733,11 +737,11 @@ class DataBrowserWidget(QWidget):
                 result = crud.update_record(self.current_table, update_data, pk_values, schema)
                 if result.error_message:
                     error_count += 1
-                    QMessageBox.critical(self, "\u9519\u8bef", f"\u66f4\u65b0\u5931\u8d25: {result.error_message}")
+                    QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "update_fail").format(msg=result.error_message))
                     return
                 success_count += 1
             except Exception as e:
-                QMessageBox.critical(self, "\u9519\u8bef", f"\u66f4\u65b0\u5f02\u5e38: {e}")
+                QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "update_error").format(msg=e))
                 return
 
         # 3. Execute inserts
@@ -749,25 +753,25 @@ class DataBrowserWidget(QWidget):
                 result = crud.create_record(self.current_table, insert_data)
                 if result.error_message:
                     error_count += 1
-                    QMessageBox.critical(self, "\u9519\u8bef", f"\u65b0\u589e\u5931\u8d25: {result.error_message}")
+                    QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "insert_fail").format(msg=result.error_message))
                     return
                 success_count += 1
             except Exception as e:
-                QMessageBox.critical(self, "\u9519\u8bef", f"\u65b0\u589e\u5f02\u5e38: {e}")
+                QMessageBox.critical(self, self.tr("data_browser", "error"), self.tr("data_browser", "insert_error").format(msg=e))
                 return
 
         self.model.clear_dirty()
         self._fetch_data()
         self.edit_toggle_btn.setChecked(False)
-        self.edit_toggle_btn.setText("\u7f16\u8f91\u6a21\u5f0f")
-        QMessageBox.information(self, "\u6210\u529f", f"\u5df2\u6210\u529f\u4fdd\u5b58 {success_count} \u9879\u66f4\u6539\u3002")
+        self.edit_toggle_btn.setText(self.tr("data_browser", "edit_mode"))
+        QMessageBox.information(self, self.tr("data_browser", "save_success").format(count=success_count))
 
     def _discard_changes(self) -> None:
         """Discard all local changes."""
         reply = QMessageBox.question(
             self,
-            "\u786e\u8ba4\u64a4\u9500",
-            "\u786e\u5b9a\u8981\u64a4\u9500\u6240\u6709\u672a\u4fdd\u5b58\u7684\u66f4\u6539\u5417\uff1f",
+            self.tr("data_browser", "discard_title"),
+            self.tr("data_browser", "discard_msg"),
         )
         if reply != QMessageBox.Yes:
             return
@@ -775,4 +779,4 @@ class DataBrowserWidget(QWidget):
         self.model.undo_changes()
         self._fetch_data()
         self.edit_toggle_btn.setChecked(False)
-        self.edit_toggle_btn.setText("\u7f16\u8f91\u6a21\u5f0f")
+        self.edit_toggle_btn.setText(self.tr("data_browser", "edit_mode"))

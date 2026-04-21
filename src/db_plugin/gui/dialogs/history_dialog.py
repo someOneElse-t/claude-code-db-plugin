@@ -12,6 +12,7 @@ from PySide6.QtWidgets import (
 from PySide6.QtCore import Qt
 
 from db_plugin.services.query_history import QueryHistoryService
+from db_plugin.gui.i18n import _t
 
 
 class HistoryDialog(QDialog):
@@ -20,10 +21,13 @@ class HistoryDialog(QDialog):
     def __init__(self, history_service: QueryHistoryService, parent=None):
         super().__init__(parent)
         self.history_service = history_service
-        self.setWindowTitle("\u67e5\u8be2\u5386\u53f2")
+        self.setWindowTitle(_t("history", "title"))
         self.resize(800, 500)
         self._setup_ui()
         self._refresh()
+
+    def tr(self, context: str, key: str) -> str:
+        return _t(context, key)
 
     def _setup_ui(self) -> None:
         layout = QVBoxLayout(self)
@@ -31,16 +35,16 @@ class HistoryDialog(QDialog):
         # Search bar
         search_layout = QHBoxLayout()
         self.search_input = QLineEdit()
-        self.search_input.setPlaceholderText("\u641c\u7d22 SQL...")
+        self.search_input.setPlaceholderText(self.tr("history", "search_placeholder"))
         self.search_input.returnPressed.connect(self._search)
-        search_layout.addWidget(QLabel("\u641c\u7d22:"))
+        search_layout.addWidget(QLabel(self.tr("history", "search") + ":"))
         search_layout.addWidget(self.search_input)
 
-        self.search_btn = QPushButton("\u641c\u7d22")
+        self.search_btn = QPushButton(self.tr("history", "search"))
         self.search_btn.clicked.connect(self._search)
         search_layout.addWidget(self.search_btn)
 
-        self.show_all_btn = QPushButton("\u5168\u90e8")
+        self.show_all_btn = QPushButton(self.tr("history", "show_all"))
         self.show_all_btn.clicked.connect(self._refresh)
         search_layout.addWidget(self.show_all_btn)
         layout.addLayout(search_layout)
@@ -48,7 +52,13 @@ class HistoryDialog(QDialog):
         # History table
         self.table = QTableWidget()
         self.table.setColumnCount(5)
-        self.table.setHorizontalHeaderLabels(["\u65f6\u95f4", "\u8fde\u63a5", "\u72b6\u6001", "\u8017\u65f6", "SQL"])
+        self.table.setHorizontalHeaderLabels([
+            self.tr("history", "time"),
+            self.tr("history", "connection"),
+            self.tr("history", "status"),
+            self.tr("history", "elapsed"),
+            self.tr("history", "sql"),
+        ])
         self.table.horizontalHeader().setStretchLastSection(True)
         self.table.horizontalHeader().setSectionResizeMode(4, QHeaderView.Stretch)
         self.table.setSelectionBehavior(QTableWidget.SelectionBehavior.SelectRows)
@@ -58,16 +68,16 @@ class HistoryDialog(QDialog):
 
         # Buttons
         btn_layout = QHBoxLayout()
-        self.favorite_btn = QPushButton("\u6536\u85cf/\u53d6\u6d88")
+        self.favorite_btn = QPushButton(self.tr("history", "favorite_toggle"))
         self.favorite_btn.clicked.connect(self._toggle_favorite)
         btn_layout.addWidget(self.favorite_btn)
 
-        self.delete_btn = QPushButton("\u5220\u9664")
+        self.delete_btn = QPushButton(self.tr("history", "delete"))
         self.delete_btn.clicked.connect(self._delete_selected)
         btn_layout.addWidget(self.delete_btn)
 
         btn_layout.addStretch()
-        self.close_btn = QPushButton("\u5173\u95ed")
+        self.close_btn = QPushButton(self.tr("history", "close"))
         self.close_btn.clicked.connect(self.reject)
         btn_layout.addWidget(self.close_btn)
         layout.addLayout(btn_layout)

@@ -20,6 +20,7 @@ from db_plugin.gui.widgets.sql_editor import SqlEditorWidget
 from db_plugin.gui.dialogs.connection_dialog import ConnectionDialog
 from db_plugin.services.connection_manager import ConnectionManager
 from db_plugin.gui.app import toggle_theme, get_current_theme
+from db_plugin.gui.i18n import _t
 
 logger = logging.getLogger(__name__)
 
@@ -34,6 +35,9 @@ class MainWindow(QMainWindow):
         self.resize(1200, 800)
         self._setup_ui()
 
+    def tr(self, context: str, key: str) -> str:
+        return _t(context, key)
+
     def _setup_ui(self) -> None:
         self._setup_menu()
         self._setup_toolbar()
@@ -44,27 +48,27 @@ class MainWindow(QMainWindow):
     def _setup_menu(self) -> None:
         menubar = self.menuBar()
 
-        file_menu = menubar.addMenu("\u6587\u4ef6")
-        exit_action = QAction("\u9000\u51fa", self)
+        file_menu = menubar.addMenu(self.tr("menus", "file"))
+        exit_action = QAction(self.tr("menus", "exit"), self)
         exit_action.triggered.connect(self.close)
         file_menu.addAction(exit_action)
 
-        query_menu = menubar.addMenu("\u67e5\u8be2")
-        execute_action = QAction("\u6267\u884cSQL", self)
+        query_menu = menubar.addMenu(self.tr("menus", "query"))
+        execute_action = QAction(self.tr("menus", "execute_sql"), self)
         execute_action.setShortcut("Ctrl+Return")
         execute_action.triggered.connect(self._execute_sql)
         query_menu.addAction(execute_action)
 
-        history_action = QAction("\u67e5\u8be2\u5386\u53f2", self)
+        history_action = QAction(self.tr("menus", "query_history"), self)
         history_action.triggered.connect(self._show_history)
         query_menu.addAction(history_action)
 
-        tools_menu = menubar.addMenu("\u5de5\u5177")
-        fake_data_action = QAction("\u5047\u6570\u636e\u751f\u6210", self)
+        tools_menu = menubar.addMenu(self.tr("menus", "tools"))
+        fake_data_action = QAction(self.tr("menus", "fake_data"), self)
         tools_menu.addAction(fake_data_action)
 
-        help_menu = menubar.addMenu("\u5e2e\u52a9")
-        about_action = QAction("\u5173\u4e8e", self)
+        help_menu = menubar.addMenu(self.tr("menus", "help"))
+        about_action = QAction(self.tr("menus", "about"), self)
         about_action.triggered.connect(self._show_about)
         help_menu.addAction(about_action)
 
@@ -81,51 +85,46 @@ class MainWindow(QMainWindow):
 
         style = self.style()
 
-        # Connection management
         connect_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), "\u8fde\u63a5\u7ba1\u7406"
+            style.standardIcon(style.StandardPixmap.SP_DialogOpenButton), self.tr("toolbar", "connection_manager")
         )
-        connect_action.setToolTip("\u7ba1\u7406\u6570\u636e\u5e93\u8fde\u63a5")
+        connect_action.setToolTip(self.tr("toolbar", "connection_manager_tip"))
         connect_action.triggered.connect(self._show_connection_dialog)
 
         toolbar.addSeparator()
 
-        # Execute SQL
         exec_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_MediaPlay), "\u6267\u884cSQL"
+            style.standardIcon(style.StandardPixmap.SP_MediaPlay), self.tr("toolbar", "execute_sql")
         )
-        exec_action.setToolTip("\u6267\u884c\u5f53\u524d SQL \u8bed\u53e5 (Ctrl+Return)")
+        exec_action.setToolTip(self.tr("toolbar", "execute_sql_tip"))
         exec_action.triggered.connect(self._execute_sql)
 
-        # Fake data
         fake_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_FileDialogDetailedView), "\u5047\u6570\u636e"
+            style.standardIcon(style.StandardPixmap.SP_FileDialogDetailedView), self.tr("toolbar", "fake_data")
         )
-        fake_action.setToolTip("\u751f\u6210\u5047\u6570\u636e")
+        fake_action.setToolTip(self.tr("toolbar", "fake_data_tip"))
         fake_action.triggered.connect(self._show_fake_data_dialog)
 
         toolbar.addSeparator()
 
-        # Import
         import_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), "\u5bfc\u5165"
+            style.standardIcon(style.StandardPixmap.SP_DialogApplyButton), self.tr("toolbar", "import")
         )
-        import_action.setToolTip("\u4ece CSV / Excel \u5bfc\u5165\u6570\u636e")
+        import_action.setToolTip(self.tr("toolbar", "import_tip"))
         import_action.triggered.connect(lambda: self._show_import_export_dialog("import"))
 
-        # Export
         export_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), "\u5bfc\u51fa"
+            style.standardIcon(style.StandardPixmap.SP_DialogSaveButton), self.tr("toolbar", "export")
         )
-        export_action.setToolTip("\u5bfc\u51fa\u6570\u636e\u5230 CSV / Excel / JSON")
+        export_action.setToolTip(self.tr("toolbar", "export_tip"))
         export_action.triggered.connect(lambda: self._show_import_export_dialog("export"))
 
         toolbar.addSeparator()
 
         theme_action = toolbar.addAction(
-            style.standardIcon(style.StandardPixmap.SP_DesktopIcon), "\u4e3b\u9898"
+            style.standardIcon(style.StandardPixmap.SP_DesktopIcon), self.tr("toolbar", "theme")
         )
-        theme_action.setToolTip("\u5207\u6362\u660e\u6697\u4e3b\u9898")
+        theme_action.setToolTip(self.tr("toolbar", "theme_tip"))
         theme_action.triggered.connect(self._toggle_theme)
 
         self.addToolBar(toolbar)
@@ -134,12 +133,12 @@ class MainWindow(QMainWindow):
         self.tabs = QTabWidget()
         self.data_browser = DataBrowserWidget(self.connection_manager)
         self.sql_editor = SqlEditorWidget(self.connection_manager)
-        self.tabs.addTab(self.data_browser, "\u6570\u636e\u6d4f\u89c8")
-        self.tabs.addTab(self.sql_editor, "SQL \u7f16\u8f91\u5668")
+        self.tabs.addTab(self.data_browser, self.tr("data_browser", "data_browser_tab"))
+        self.tabs.addTab(self.sql_editor, self.tr("sql_editor", "tab"))
         self.setCentralWidget(self.tabs)
 
     def _setup_object_tree(self) -> None:
-        dock = QDockWidget("\u6570\u636e\u5e93\u5bf9\u8c61", self)
+        dock = QDockWidget(self.tr("object_tree", "title"), self)
         self.object_tree = ObjectTreePanel(self.connection_manager)
         self.object_tree.table_selected.connect(self._on_table_selected)
         dock.setWidget(self.object_tree)
@@ -147,13 +146,10 @@ class MainWindow(QMainWindow):
 
     def _setup_statusbar(self) -> None:
         self.statusbar = QStatusBar()
-
-        # Connection status indicator (colored dot)
-        self.conn_status_label = QLabel("\u25cf ")
+        self.conn_status_label = QLabel("● ")
         self.conn_status_label.setStyleSheet("color: #BDBDBD; font-size: 16px;")
         self.statusbar.addWidget(self.conn_status_label)
-
-        self.statusbar.showMessage("\u672a\u8fde\u63a5")
+        self.statusbar.showMessage(self.tr("statusbar", "not_connected"))
         self.setStatusBar(self.statusbar)
 
     def _show_connection_dialog(self) -> None:
@@ -163,7 +159,7 @@ class MainWindow(QMainWindow):
             self.object_tree.refresh()
 
     def _show_about(self) -> None:
-        QMessageBox.about(self, "\u5173\u4e8e", "Claude Code DB Plugin v0.1.0")
+        QMessageBox.about(self, self.tr("dialogs", "about_title"), self.tr("dialogs", "about_msg"))
 
     def _show_history(self) -> None:
         from db_plugin.gui.dialogs.history_dialog import HistoryDialog
@@ -175,16 +171,16 @@ class MainWindow(QMainWindow):
         active = self.connection_manager.active_connection_name
         if active:
             config = self.connection_manager.get(active)
-            self.statusbar.showMessage(
-                f"\u5df2\u8fde\u63a5: {config.dialect_name}@{config.host}:{config.port}/{config.database}"
+            msg = self.tr("statusbar", "connected").format(
+                dialect=config.dialect_name, host=config.host, port=config.port, database=config.database
             )
+            self.statusbar.showMessage(msg)
             self.conn_status_label.setStyleSheet("color: #4CAF50; font-size: 16px;")
         else:
-            self.statusbar.showMessage("\u672a\u8fde\u63a5")
+            self.statusbar.showMessage(self.tr("statusbar", "not_connected"))
             self.conn_status_label.setStyleSheet("color: #BDBDBD; font-size: 16px;")
 
     def _on_table_selected(self, table_name: str) -> None:
-        # Set the dialect's current schema if available
         if "." in table_name:
             schema = table_name.split(".", 1)[0]
             db_conn = self.connection_manager.db_connection
@@ -197,19 +193,18 @@ class MainWindow(QMainWindow):
 
     def _show_fake_data_dialog(self) -> None:
         if not self.connection_manager.db_connection:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "not_connected_warn"))
             return
         from db_plugin.gui.dialogs.fake_data_dialog import FakeDataDialog
         default_table = self.data_browser.current_table or ""
         dialog = FakeDataDialog(self.connection_manager, parent=self, default_table=default_table)
         if dialog.exec():
-            # Refresh the data browser if a table is currently loaded
             if self.data_browser.current_table:
                 self.data_browser._fetch_data()
 
     def _show_import_export_dialog(self, mode: str) -> None:
         if not self.connection_manager.db_connection:
-            QMessageBox.warning(self, "\u63d0\u793a", "\u8bf7\u5148\u8fde\u63a5\u6570\u636e\u5e93")
+            QMessageBox.warning(self, self.tr("dialogs", "prompt"), self.tr("dialogs", "not_connected_warn"))
             return
         from db_plugin.gui.dialogs.import_export_dialog import ImportExportDialog
         dialog = ImportExportDialog(self.connection_manager, parent=self, mode=mode, default_table=self.data_browser.current_table)
@@ -218,5 +213,5 @@ class MainWindow(QMainWindow):
 
     def _toggle_theme(self) -> None:
         new_theme = toggle_theme()
-        theme_name = "\u6697\u8272" if new_theme == "dark" else "\u660e\u4eae"
-        self.statusbar.showMessage(f"\u4e3b\u9898\u5df2\u5207\u6362\u4e3a: {theme_name}")
+        theme_name = self.tr("theme", "dark") if new_theme == "dark" else self.tr("theme", "light")
+        self.statusbar.showMessage(self.tr("statusbar", "theme_switched").format(theme=theme_name))
