@@ -214,3 +214,11 @@ class MySQLDialect(DialectBase):
             "mediumblob": bytes,
             "longblob": bytes,
         }
+
+    def commit(self) -> None:
+        if self._connection:
+            self._connection.commit()
+
+    def rollback(self) -> None:
+        if self._connection:
+            self._connection.rollback()

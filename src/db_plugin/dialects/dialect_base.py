@@ -82,3 +82,11 @@ class DialectBase(ABC):
     @abstractmethod
     def get_type_mapping(self) -> dict[str, type]:
         """Return mapping of database type names to Python types."""
+
+    @abstractmethod
+    def commit(self) -> None:
+        """Commit the current transaction."""
+
+    @abstractmethod
+    def rollback(self) -> None:
+        """Rollback the current transaction."""
